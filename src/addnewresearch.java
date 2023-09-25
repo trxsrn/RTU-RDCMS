@@ -10,9 +10,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -27,11 +35,14 @@ import com.toedter.calendar.JDayChooser;
 import com.toedter.calendar.JMonthChooser;
 import com.toedter.calendar.JYearChooser;
 import com.toedter.components.JSpinField;
+import java.awt.Color;
+import java.awt.SystemColor;
+import javax.swing.JTextArea;
 
 public class addnewresearch extends JFrame {
 
     private JPanel contentPane;
-    private JTextField textField_1;
+    private JTextArea textField_1;
     private JTextField author_txtfld;
     private JTable table;
     private DefaultTableModel tableModel;
@@ -58,28 +69,28 @@ public class addnewresearch extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 906, 699);
         contentPane = new JPanel();
+        contentPane.setBackground(SystemColor.textHighlight);
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
         contentPane.setLayout(null);
 
-        JLabel lblNewLabel = new JLabel("ADD NEW RESEARCH");
-        lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
-        lblNewLabel.setBounds(363, 68, 169, 13);
-        contentPane.add(lblNewLabel);
-
         JLabel lblNewLabel_1 = new JLabel("TITLE");
+        lblNewLabel_1.setForeground(SystemColor.text);
         lblNewLabel_1.setBounds(48, 190, 81, 57);
         contentPane.add(lblNewLabel_1);
 
         JLabel lblNewLabel_1_1 = new JLabel("AUTHOR");
+        lblNewLabel_1_1.setForeground(SystemColor.text);
         lblNewLabel_1_1.setBounds(48, 267, 81, 13);
         contentPane.add(lblNewLabel_1_1);
+        
+        JScrollPane scrollPane_1 = new JScrollPane();
+        scrollPane_1.setBounds(139, 187, 659, 60);
+        contentPane.add(scrollPane_1);
 
-        textField_1 = new JTextField();
+        textField_1 = new JTextArea();
+        scrollPane_1.setViewportView(textField_1);
         textField_1.setColumns(10);
-        textField_1.setBounds(139, 187, 659, 60);
-        contentPane.add(textField_1);
 
         author_txtfld = new JTextField();
         author_txtfld.addKeyListener(new KeyAdapter() {
@@ -107,67 +118,7 @@ public class addnewresearch extends JFrame {
         
         
 
-        JButton btnNewButton = new JButton("SUBMIT");
-        btnNewButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-            	
-            	String title = textField_1.getText();
-              
-              // Assuming you want to retrieve the IDs, college, and department from the table
-              ArrayList<String> storedIds = new ArrayList<>();
-              ArrayList<String> storedColleges = new ArrayList<>();
-              ArrayList<String> storedDepartments = new ArrayList<>();
-
-              int rowCount = tableModel.getRowCount();
-              int columnId = 0; // Assuming the ID is in the first column (0-indexed)
-              int columnCollege = 1; // Assuming the college is in the second column (1-indexed)
-              int columnDepartment = 2; // Assuming the department is in the third column (2-indexed)
-////
-              for (int i = 0; i < rowCount; i++) {
-                  String id = tableModel.getValueAt(i, columnId).toString();
-                  String college = tableModel.getValueAt(i, columnCollege).toString();
-                  String department = tableModel.getValueAt(i, columnDepartment).toString();
-                 
-                  storedIds.add(id);
-                  storedColleges.add(college);
-                  storedDepartments.add(department);
-              }
-////
-              // Now, the ArrayLists contain the IDs, colleges, and departments for each author
-////              
-              StringBuilder concatenatedIds = new StringBuilder();
-
-              for (String id : storedIds) {
-                  concatenatedIds.append(id).append(';');
-              }
-
-              // Remove the trailing semicolon if it exists
-              if (concatenatedIds.length() > 0) {
-                 concatenatedIds.setLength(concatenatedIds.length() - 1);
-             }
-////
-////              // Establish a database connection
-              try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/rdc-rms", "root", "")) {
-                  String insert = "INSERT INTO research (title, faculty, college, department) VALUES (?, ?, ?, ?)";                  
-                  PreparedStatement preparedStatement = connection.prepareStatement(insert);                  preparedStatement.setString(1, title);                  preparedStatement.setString(2, concatenatedIds.toString());                  preparedStatement.setString(3, String.join(";", storedColleges));                  preparedStatement.setString(4, String.join(";", storedDepartments));                  // Execute the insert statement                  int rowsInserted = preparedStatement.executeUpdate();                  
-                 if (rowsInserted > 0) {
-                     System.out.println("Data inserted successfully.");
-                 } else {
-                     System.out.println("Data insertion failed.");
-                 }
-             } catch (SQLException ex) {
-                 ex.printStackTrace();
-             }
-//          	
-          
-            }
-        });
-        btnNewButton.setBounds(713, 569, 85, 33);
-        contentPane.add(btnNewButton);
-
-        JButton btnCancel = new JButton("CANCEL");
-        btnCancel.setBounds(48, 569, 85, 33);
-        contentPane.add(btnCancel);
+       
 
         JButton btnNewButton_1 = new JButton("ADD");
         btnNewButton_1.addActionListener(new ActionListener() {
@@ -226,22 +177,30 @@ public class addnewresearch extends JFrame {
         discipline.setBounds(139, 144, 226, 33);
         contentPane.add(discipline);
         
-        discipline.addItem("CAH - Culture, Arts, and Humanities");
-        discipline.addItem("PSS -Psychology & Social Sciences");
-        discipline.addItem("BIT - Business Innovation & Technopreneurship");
-        discipline.addItem("HKSS - Human Kinetics & Sports Science");
-        discipline.addItem("ET - Engineering & Technology");
-        discipline.addItem("PIS - Policy & International Studies ");
-        discipline.addItem("UPPB - Urban Agriculture & Plant Biotechnology");
-        discipline.addItem("MB - Mushroom Biotechnology ");
-        discipline.addItem("GIES - Gender & Inclusive Education Studies");
-        discipline.addItem("RE - Research to Extension");
-        discipline.addItem("ASSST - Astronomy & Space Science Satellite Technology"); 
-        discipline.addItem("ECCS - Environmental & Climate Change Studies");
-        discipline.addItem("DSSA - Data Science & Smart Analytics");
+        Map<String, String> disciplineCodeMap = new HashMap<>();
+        disciplineCodeMap.put("CAH - Culture, Arts, and Humanities", "CAH");
+        disciplineCodeMap.put("PSS - Psychology & Social Sciences", "PSS");
+        disciplineCodeMap.put("BIT - Business Innovation & Technopreneurship", "BIT");
+        disciplineCodeMap.put("HKSS - Human Kinetics & Sports Science", "HKSS");
+        disciplineCodeMap.put("ET - Engineering & Technology", "ET");
+        disciplineCodeMap.put("PIS - Policy & International Studies", "PIS");
+        disciplineCodeMap.put("UPPB - Urban Agriculture & Plant Biotechnology", "UPPB");
+        disciplineCodeMap.put("MB - Mushroom Biotechnology ", "MB");
+        disciplineCodeMap.put("GIES - Gender & Inclusive Education Studies", "GIES");
+        disciplineCodeMap.put("RE - Research to Extension", "RE");
+        disciplineCodeMap.put("ASSST - Astronomy & Space Science Satellite Technology", "ASST"); 
+        disciplineCodeMap.put("ECCS - Environmental & Climate Change Studies", "ECCS");
+        disciplineCodeMap.put("DSSA - Data Science & Smart Analytics", "DSSA");
+  
+        
+        for (String disciplineName : disciplineCodeMap.keySet()) {
+            discipline.addItem(disciplineName);
+        }
+        
  
         
         JLabel lblNewLabel_1_1_1 = new JLabel("PAPER ID");
+        lblNewLabel_1_1_1.setForeground(SystemColor.text);
         lblNewLabel_1_1_1.setBounds(48, 154, 81, 13);
         contentPane.add(lblNewLabel_1_1_1);
         
@@ -257,17 +216,129 @@ public class addnewresearch extends JFrame {
         month.setBounds(375, 144, 169, 33);
         contentPane.add(month);
         
-        month.addItem("January");
-        month.addItem("February");
-        month.addItem("March");
-        month.addItem("April");
-        month.addItem("May");
-        month.addItem("June");
-        month.addItem("July");
-        month.addItem("August");
-        month.addItem("September");
-        month.addItem("November");
-        month.addItem("December");
+        Map<String, String> monthCodeMap = new HashMap<>();
+        monthCodeMap.put("January", "1");
+        monthCodeMap.put("February", "2");
+        monthCodeMap.put("March", "3");
+        monthCodeMap.put("April", "4");
+        monthCodeMap.put("May", "5");
+        monthCodeMap.put("June", "6");
+        monthCodeMap.put("July", "7");
+        monthCodeMap.put("August", "8");
+        monthCodeMap.put("September", "9");
+        monthCodeMap.put("November", "10");
+        monthCodeMap.put("December", "11");
+  
+        
+        for (String monthName : monthCodeMap.keySet()) {
+            month.addItem(monthName);
+        }
+        
+        
+       
+        
+        JButton btnNewButton = new JButton("SUBMIT");
+        btnNewButton.setForeground(SystemColor.text);
+        btnNewButton.setBackground(new Color(0, 255, 0));
+        btnNewButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	
+            	String selectedItem = discipline.getSelectedItem().toString();
+            	String disciplinecode = disciplineCodeMap.get(selectedItem);
+            	String selectedmonth = month.getSelectedItem().toString();
+            	String monthcode = monthCodeMap.get(selectedmonth);
+            	int selectedYear = year.getYear();
+            	String count = number.getValue().toString();
+            	String final_id = disciplinecode + " - " + monthcode + " - " + selectedYear + " - " + count;
+            	String title = textField_1.getText();
+            	String status = "Ongoing";
+
+            	// Establish a database connection
+            	try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/rdc-rms", "root", "")) {
+            	    // Insert data into the research_faculty table for each author
+            		String insertFaculty = "INSERT INTO research_faculty (paper_id, title, faculty, college, department, status) VALUES (?, ?, ?, ?, ?, ?)";
+            		PreparedStatement facultyStatement = connection.prepareStatement(insertFaculty);
+
+            		for (int i = 0; i < tableModel.getRowCount(); i++) {
+            		    String authorId = tableModel.getValueAt(i, 0).toString();
+            		    String authorname = tableModel.getValueAt(i, 1).toString();
+            		    String college = tableModel.getValueAt(i, 2).toString();
+            		    String department = tableModel.getValueAt(i, 3).toString();
+
+            		    facultyStatement.setString(1, final_id);
+            		    facultyStatement.setString(2, title);
+            		    facultyStatement.setString(3, authorId); 
+            		    facultyStatement.setString(4, college);
+            		    facultyStatement.setString(5, department);
+            		    facultyStatement.setString(6, status);
+
+            		    // Execute the insert statement for each author
+            		    int rowsInsertedFaculty = facultyStatement.executeUpdate();
+
+            		    if (rowsInsertedFaculty > 0) {
+            		        System.out.println("Data inserted successfully into research_faculty for author " + authorname);
+            		    } else {
+            		        System.out.println("Data insertion failed for research_faculty for author " + authorname);
+            		    }
+            		}
+
+
+            	    // Insert data into the research_summary table
+            		// Get the colleges and departments as lists
+            		List<String> colleges = getCollegesAsList();
+            		List<String> departments = getDepartmentsAsList();
+
+            		// Create a set to store unique colleges and departments for each paper
+            		Set<String> uniqueColleges = new HashSet<>(colleges);
+            		Set<String> uniqueDepartments = new HashSet<>(departments);
+
+            		// Create a comma-separated string for unique colleges and departments
+            		String uniqueCollegesStr = String.join(", ", uniqueColleges);
+            		String uniqueDepartmentsStr = String.join(", ", uniqueDepartments);
+
+            		// Create the insert statement for research_summary
+            		String insertSummary = "INSERT INTO research_summary (paper_id, title, college, department, status) VALUES (?, ?, ?, ?, ?)";
+            		PreparedStatement summaryStatement = connection.prepareStatement(insertSummary);
+            		summaryStatement.setString(1, final_id);
+            		summaryStatement.setString(2, title);
+            		summaryStatement.setString(3, uniqueCollegesStr);
+            		summaryStatement.setString(4, uniqueDepartmentsStr);
+            		summaryStatement.setString(5, status);
+
+            		// Execute the insert statement for research_summary
+            		int rowsInsertedSummary = summaryStatement.executeUpdate();
+
+            		if (rowsInsertedSummary > 0) {
+            			 JOptionPane.showMessageDialog(null, "Addition was successful!", "SUCCESS", JOptionPane.INFORMATION_MESSAGE);
+ 	                    dispose();
+            		} else {
+            		    System.out.println("Data insertion failed for research_summary.");
+            		}
+            	} catch (SQLException ex) {
+            	    ex.printStackTrace();
+            	}
+            }
+        });
+        btnNewButton.setBounds(436, 569, 362, 33);
+        contentPane.add(btnNewButton);
+
+        JButton btnCancel = new JButton("CANCEL");
+        btnCancel.setForeground(SystemColor.text);
+        btnCancel.setBackground(new Color(255, 0, 0));
+        btnCancel.setBounds(48, 569, 362, 33);
+        contentPane.add(btnCancel);
+        
+        JPanel panel = new JPanel();
+        panel.setBackground(Color.YELLOW);
+        panel.setBounds(0, 0, 892, 72);
+        contentPane.add(panel);
+        panel.setLayout(null);
+        
+                JLabel lblNewLabel = new JLabel("ADD NEW RESEARCH");
+                lblNewLabel.setBounds(295, 26, 277, 20);
+                panel.add(lblNewLabel);
+                lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+                lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
     }
 
     private void initializeDatabaseConnection() {
@@ -310,4 +381,24 @@ public class addnewresearch extends JFrame {
             author_txtfld.moveCaretPosition(start);
         }
     }
+    
+    private List<String> getCollegesAsList() {
+        List<String> colleges = new ArrayList<>();
+        for (int i = 0; i < tableModel.getRowCount(); i++) {
+            String college = tableModel.getValueAt(i, 2).toString();
+            colleges.add(college);
+        }
+        return colleges;
+    }
+
+    private List<String> getDepartmentsAsList() {
+        List<String> departments = new ArrayList<>();
+        for (int i = 0; i < tableModel.getRowCount(); i++) {
+            String department = tableModel.getValueAt(i, 3).toString();
+            departments.add(department);
+        }
+        return departments;
+    }
+
+
 }

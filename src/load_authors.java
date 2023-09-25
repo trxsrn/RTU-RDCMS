@@ -2,14 +2,12 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Vector;
-
 import javax.swing.table.DefaultTableModel;
 
-public class autoupdate_research {
-    public static DefaultTableModel loadResearchData(DefaultTableModel researchtableModel) {
+public class load_authors {
+    public static DefaultTableModel loadResearchData(DefaultTableModel authorstableModel, String paperId) {
         Connection con = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
@@ -17,18 +15,21 @@ public class autoupdate_research {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             con = DriverManager.getConnection("jdbc:mysql://localhost:3306/rdc-rms", "root", "");
-            pst = con.prepareStatement("SELECT paper_id, title, status FROM research_summary");
+            
+            // Modify the SQL query to select authors based on the paper ID
+            pst = con.prepareStatement("SELECT faculty, college, department FROM research_faculty WHERE paper_id = ?");
+            pst.setString(1, paperId); // Set the paper ID parameter
             rs = pst.executeQuery();
-            ResultSetMetaData rsmd = rs.getMetaData();
-            int n = rsmd.getColumnCount();
-            researchtableModel.setColumnIdentifiers(new Object[]{"PAPER ID", "TITLE", "STATUS"});
+
+            authorstableModel.setRowCount(0); // Clear existing rows
 
             while (rs.next()) {
                 Vector<Object> row = new Vector<>();
-                for (int i = 1; i <= n; i++) {
-                    row.add(rs.getString(i));
-                }
-                researchtableModel.addRow(row);
+                // Assuming the columns in your research_faculty table are named "faculty," "college," and "department"
+                row.add(rs.getString("faculty"));
+                row.add(rs.getString("college"));
+                row.add(rs.getString("department"));
+                authorstableModel.addRow(row);
             }
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
@@ -49,6 +50,6 @@ public class autoupdate_research {
             }
         }
 
-        return researchtableModel;
+        return authorstableModel;
     }
 }

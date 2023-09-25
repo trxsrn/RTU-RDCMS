@@ -23,7 +23,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.Vector;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
@@ -35,6 +37,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Font;
 import java.awt.BorderLayout;
+import com.toedter.calendar.JCalendar;
+import java.awt.Label;
 
 public class dashboard extends JFrame {
 	
@@ -50,8 +54,10 @@ public class dashboard extends JFrame {
     PreparedStatement pst = null;
     ResultSet rs = null;
     private JTextField faculty_search;
-    private JTextField textField_1;
+    private JTextField research_search;
     private JButton selectedButton = null;
+    private JTable table_1;
+    private JLabel dateTimeLabel;
     private JTable table;
 
     
@@ -121,24 +127,65 @@ public class dashboard extends JFrame {
         lblNewLabel_3.setHorizontalAlignment(SwingConstants.LEFT);
         lblNewLabel_3.setBounds(25, 20, 160, 32);
         panel_1.add(lblNewLabel_3);
+
         
-        JLabel lblNewLabel_4 = new JLabel("New label");
-        lblNewLabel_4.setForeground(SystemColor.text);
-        lblNewLabel_4.setFont(new Font("Tahoma", Font.PLAIN, 20));
-        lblNewLabel_4.setBounds(995, 32, 101, 13);
-        panel_1.add(lblNewLabel_4);
+        dateTimeLabel = new JLabel();
+        dateTimeLabel.setHorizontalAlignment(SwingConstants.TRAILING);
+        dateTimeLabel.setForeground(SystemColor.text);
+        dateTimeLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
+        dateTimeLabel.setBounds(820, 20, 308, 32); // Adjust the position and size as needed
+        panel_1.add(dateTimeLabel);
+
+        // Create a Timer that updates the label every second (1000 milliseconds)
+        int delay = 1000; // 1000 milliseconds = 1 second
+        Timer timer = new Timer(delay, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateDateTimeLabel();
+            }
+        });
+        timer.start();
         
         JPanel panel_2 = new JPanel();
         panel_2.setBounds(0, 73, 1152, 723);
         dashboard.add(panel_2);
         panel_2.setLayout(null);
         
-        JScrollPane scrollPane = new JScrollPane();
-        scrollPane.setBounds(45, 127, 1063, 192);
-        panel_2.add(scrollPane);
+        JPanel panel_4 = new JPanel();
+        panel_4.setBackground(SystemColor.textHighlight);
+        panel_4.setBounds(795, 489, 347, 29);
+        panel_2.add(panel_4);
+        panel_4.setLayout(null);
+        
+        Label label_1 = new Label("MY TASK");
+        label_1.setAlignment(Label.CENTER);
+        label_1.setBounds(90, 0, 135, 29);
+        label_1.setForeground(Color.WHITE);
+        label_1.setFont(new Font("Dialog", Font.PLAIN, 10));
+        panel_4.add(label_1);
+        
+        table_1 = new JTable();
+        table_1.setBounds(795, 517, 347, 167);
+        panel_2.add(table_1);
+        
+        JButton btnNewButton_2 = new JButton("ADD TASK");
+        btnNewButton_2.setForeground(Color.WHITE);
+        btnNewButton_2.setBackground(Color.YELLOW);
+        btnNewButton_2.setBounds(791, 684, 349, 29);
+        panel_2.add(btnNewButton_2);
+        
+        JCalendar calendar = new JCalendar();
+        calendar.setBounds(795, 53, 347, 249);
+        panel_2.add(calendar);
         
         table = new JTable();
-        scrollPane.setViewportView(table);
+        table.setBounds(795, 312, 347, 167);
+        panel_2.add(table);
+        
+        JLabel lblNewLabel_1 = new JLabel("Events");
+        lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
+        lblNewLabel_1.setBounds(795, 315, 117, 29);
+        panel_2.add(lblNewLabel_1);
         
         JPanel faculty = new JPanel();
         faculty.setBackground(Color.WHITE);
@@ -391,15 +438,144 @@ public class dashboard extends JFrame {
         research.add(btnNewButton_1_2);
         
         JButton btnNewButton_1_1_1 = new JButton("RESET FILTER/SORT");
+        btnNewButton_1_1_1.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		
+        		researchtableModel.setRowCount(0);
+                autoupdate_research.loadResearchData(researchtableModel);
+        	}
+        });
         btnNewButton_1_1_1.setBackground(Color.ORANGE);
         btnNewButton_1_1_1.setBounds(586, 83, 261, 35);
         research.add(btnNewButton_1_1_1);
         
         JComboBox filtercombo_1 = new JComboBox();
+        filtercombo_1.addItem("CAH");
+        filtercombo_1.addItem("PSS");
+        filtercombo_1.addItem("BIT");
+        filtercombo_1.addItem("HKSS");
+        filtercombo_1.addItem("ET");
+        filtercombo_1.addItem("PIS");
+        filtercombo_1.addItem("UPPB");
+        filtercombo_1.addItem("MB");
+        filtercombo_1.addItem("GIES");
+        filtercombo_1.addItem("RE");
+        filtercombo_1.addItem("ASSST"); 
+        filtercombo_1.addItem("ECCS");
+        filtercombo_1.addItem("DSSA");
+        filtercombo_1.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String filter = filtercombo_1.getSelectedItem().toString();
+                
+                if (!"SELECT".equals(filter)) {
+                    try {
+                        // Establish a database connection (you need to fill in the connection details)
+                        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/rdc-rms", "root", "");
+                        
+                        // Modify the query to use LIKE and pass the filter as a parameter
+                        String query = "SELECT * FROM research_summary WHERE paper_id LIKE ?";
+                        
+                        // Create a PreparedStatement and set the filter value as a parameter
+                        PreparedStatement preparedStatement = connection.prepareStatement(query);
+                        preparedStatement.setString(1, "%" + filter + "%");
+                        
+                        // Execute the query and retrieve the results
+                        ResultSet resultSet = preparedStatement.executeQuery();
+                        
+                        // Clear the table model
+                        researchtableModel.setRowCount(0);
+                        
+                        boolean recordsFound = false;
+                        
+                        // Populate the table with the filtered data
+                        while (resultSet.next()) {
+                            // Extract data from the result set (adjust column names accordingly)
+                            String paperId = resultSet.getString("paper_id");
+                            String title = resultSet.getString("title");
+                            String status = resultSet.getString("status");
+                            
+                            // Add the data to the table model
+                            researchtableModel.addRow(new Object[]{paperId, title, status});
+                            
+                            recordsFound = true;
+                        }
+                        
+                        // Close resources (result set, statement, and connection)
+                        resultSet.close();
+                        preparedStatement.close();
+                        connection.close();
+                        
+                        if (!recordsFound) {
+                            // Display a message in the table itself
+                            researchtableModel.addRow(new Object[]{"No records found", "", ""});
+                        }
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                        // Handle any exceptions that may occur while querying the database
+                    }
+                } else {
+                    // If "SELECT" is selected, show all rows by reloading the full data
+                    loadResearchData();
+                }
+            }
+        });
         filtercombo_1.setBounds(384, 83, 192, 35);
         research.add(filtercombo_1);
         
+        
         JComboBox sortcombo_1 = new JComboBox();
+        sortcombo_1.addItem("A-Z");
+        sortcombo_1.addItem("Z-A");
+        sortcombo_1.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		
+        		 String sort = sortcombo_1.getSelectedItem().toString();
+                 String orderBy = "ORDER BY title"; // Replace 'column_name' with the actual column name
+                 
+                 if ("A-Z".equals(sort)) {
+                     // Sort in ascending order
+                     orderBy += " ASC";
+                 } else if ("Z-A".equals(sort)) {
+                     // Sort in descending order
+                     orderBy += " DESC";
+                 }
+
+                 try {
+                     // Establish a database connection (you need to fill in the connection details)
+                     Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/rdc-rms", "root", "");
+                     
+                     // Create a SQL query with sorting
+                     String query = "SELECT * FROM research_summary " + orderBy;
+                     
+                     // Create a PreparedStatement
+                     PreparedStatement preparedStatement = connection.prepareStatement(query);
+                     
+                     // Execute the query and retrieve the results
+                     ResultSet resultSet = preparedStatement.executeQuery();
+                     
+                     // Clear the table model
+                     researchtableModel.setRowCount(0);
+                     
+                     // Populate the table with the sorted data
+                     while (resultSet.next()) {
+                         // Extract data from the result set (adjust column names accordingly)
+                     	String paperId = resultSet.getString("paper_id");
+                         String title = resultSet.getString("title");
+                         String status = resultSet.getString("status");
+                         // Add the data to the table model
+                         researchtableModel.addRow(new Object[]{paperId, title, status});
+                     }
+                     
+                     // Close resources (result set, statement, and connection)
+                     resultSet.close();
+                     preparedStatement.close();
+                     connection.close();
+                 } catch (SQLException ex) {
+                     ex.printStackTrace();
+                     // Handle any exceptions that may occur while querying the database
+                 }
+             }
+        });
         sortcombo_1.setBounds(96, 83, 192, 35);
         research.add(sortcombo_1);
         
@@ -415,6 +591,7 @@ public class dashboard extends JFrame {
         
        
         JScrollPane researchscrollPane = new JScrollPane();
+        researchscrollPane.setViewportBorder(new EmptyBorder(0, 0, 0, 0));
         researchscrollPane.setBounds(10, 128, 1124, 607);
         research.add(researchscrollPane);
         
@@ -433,36 +610,18 @@ public class dashboard extends JFrame {
         	            int selectedRow = researchtbl.getSelectedRow();
         	            if (selectedRow >= 0) {
         	                // Get the selected faculty's data from the table model
-        	                Object paperid = researchtableModel.getValueAt(selectedRow, 0);
-        	                Object papertitle = researchtableModel.getValueAt(selectedRow, 1);
-        	                Object paperfaculty = researchtableModel.getValueAt(selectedRow, 2);
+        	                String paperid = researchtableModel.getValueAt(selectedRow, 0).toString();
+        	                String papertitle = researchtableModel.getValueAt(selectedRow, 1).toString();
+        	                String paperfaculty = researchtableModel.getValueAt(selectedRow, 2).toString();
 //        	         
-
-
-        	                // Create a new window or dialog to display the faculty profile
-        	                // You can customize this part to display the profile as needed
-        	                JFrame paperdetailFrame = new JFrame();
-        	                paperdetailFrame.setTitle("Paper Details: " + papertitle );
-        	                paperdetailFrame.setSize(400, 300);
-
-        	                // Create components to display faculty information (e.g., labels)
-        	                JLabel nameLabel = new JLabel("ID: " + paperid);
-        	                JLabel idLabel = new JLabel("TITLE: " + papertitle);
-        	                JLabel collegeLabel = new JLabel("FACULTY: " + paperfaculty);
-
-        	                // Add components to the profile window
-        	                JPanel panel = new JPanel(new GridLayout(3, 1));
-        	                panel.add(idLabel);
-        	                panel.add(nameLabel);
-        	                panel.add(collegeLabel);
-
-        	                paperdetailFrame.getContentPane().add(panel);
-        	                paperdetailFrame.setVisible(true);
+        	                researchDetails researchDetails = new researchDetails(paperid, papertitle);
+        	                researchDetails.setVisible(true);
         	            }
         	        }
         	}
         });
         researchscrollPane.setViewportView(researchtbl);
+        
         
         JPanel panel_1_1_1 = new JPanel();
         panel_1_1_1.setLayout(null);
@@ -477,12 +636,18 @@ public class dashboard extends JFrame {
         lblNewLabel_3_1_1.setBounds(25, 20, 160, 32);
         panel_1_1_1.add(lblNewLabel_3_1_1);
         
-        textField_1 = new JTextField();
-        textField_1.setColumns(10);
-        textField_1.setBounds(471, 20, 511, 35);
-        panel_1_1_1.add(textField_1);
+        research_search = new JTextField();
+        research_search.setColumns(10);
+        research_search.setBounds(471, 20, 511, 35);
+        panel_1_1_1.add(research_search);
         
         JButton btnNewButton_5 = new JButton("SEARCH");
+        btnNewButton_5.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		String searchQuery = research_search.getText().trim();
+                ResearchSearch.searchResearchData(researchtableModel, searchQuery);
+        	}
+        });
         btnNewButton_5.setForeground(SystemColor.text);
         btnNewButton_5.setBackground(SystemColor.textHighlight);
         btnNewButton_5.setBounds(992, 20, 150, 35);
@@ -647,6 +812,21 @@ public class dashboard extends JFrame {
         logoutbtn.setForeground(SystemColor.text);
         
     }
+    
+    private void updateDateTimeLabel() {
+        // Create a SimpleDateFormat object to format the date and time
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy HH:mm:ss");
+
+        // Get the current date and time
+        Date currentDate = new Date();
+
+        // Format the date and time as a string
+        String formattedDate = dateFormat.format(currentDate);
+
+        // Set the formatted date and time as the text of the JLabel
+        dateTimeLabel.setText(formattedDate);
+    }
+
 
     private void loadFacultyData() {
         // Call the loadFacultyData method from the FacultyDataAccess class
