@@ -19,6 +19,11 @@ import java.awt.Color;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextArea;
 import javax.swing.JCheckBox;
@@ -92,7 +97,7 @@ public class researchDetails extends JFrame {
         contentPane.add(scrollPane);
 
         authorstableModel = new DefaultTableModel();
-        authorstbl = new JTable(authorstableModel);
+        authorstbl = new JTable(authorstableModel);	
         scrollPane.setViewportView(authorstbl);
 
         JLabel lblNewLabel_1_1 = new JLabel("RESEARCH TITLE");
@@ -257,7 +262,42 @@ public class researchDetails extends JFrame {
                 btnNewButton.setBounds(278, 791, 182, 21);
                 contentPane.add(btnNewButton);
                 
-    
+         loadAuthors(paperid);
+    }
+
+	private void loadAuthors(String paperid) {
+		
+		try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/rdc-rms", "root", "");
+                ) {
+            // Prepare an SQL query to retrieve research data based on faculty ID
+            String sql = "SELECT `research_faculty`.faculty, `faculty`.name FROM `research_faculty` JOIN `faculty` ON `research_faculty`.faculty = `faculty`.id WHERE `research_faculty`.paper_id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, paperid);
+
+            // Execute the query and retrieve the result set
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            // Create a DefaultTableModel to hold the research data
+            DefaultTableModel authorstableModel = new DefaultTableModel();
+
+            // Add columns to the table model (you should adjust column names accordingly)
+            authorstableModel.addColumn("Faculty ID");
+            authorstableModel.addColumn("Faculty Name");
+
+            // Populate the table model with data from the result set
+            while (resultSet.next()) {
+                String faculty = resultSet.getString("faculty");
+                String name = resultSet.getString("name");
+
+                // Add a row to the table model
+                authorstableModel.addRow(new String[] { faculty, name});
+            }
+
+            // Set the table model for your JTable
+            authorstbl.setModel(authorstableModel);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 	private void selectButton() {

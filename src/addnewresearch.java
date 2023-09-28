@@ -145,7 +145,7 @@ public class addnewresearch extends JFrame {
                         int choice = JOptionPane.showConfirmDialog(null, "Author doesn't exist. Do you want to add a new author?", "Author Not Found", JOptionPane.YES_NO_OPTION);
                         if (choice == JOptionPane.YES_OPTION) {
                             // Open a new window to add a new author
-                            addnewfaculty addnewfaculty = new addnewfaculty(connection, parentDashboard);
+                            addnewfaculty addnewfaculty = new addnewfaculty(parentDashboard);
                             addnewfaculty.setVisible(true);
                         }
                     }

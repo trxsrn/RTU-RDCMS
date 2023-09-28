@@ -41,7 +41,7 @@ public class addnewfaculty extends JFrame {
 	                dashboard parentDashboard = new dashboard(); // Replace 'dashboard' with your actual class name
 
 	                // Pass the dashboard object as an argument
-	                addnewfaculty frame = new addnewfaculty(connection, parentDashboard);
+	                addnewfaculty frame = new addnewfaculty(parentDashboard);
 	                frame.setVisible(true);
 	            } catch (Exception e) {
 	                e.printStackTrace();
@@ -54,7 +54,7 @@ public class addnewfaculty extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public addnewfaculty(Connection connection, dashboard parentDashboard) {
+	public addnewfaculty(dashboard parentDashboard) {
 		setTitle("ADD NEW FACULTY");
 		this.parentDashboard = parentDashboard;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

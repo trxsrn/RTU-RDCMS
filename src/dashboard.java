@@ -459,7 +459,6 @@ public class dashboard extends JFrame {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        
         discipline.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String filter = discipline.getSelectedItem().toString();
