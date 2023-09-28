@@ -2,18 +2,12 @@ import javax.swing.*;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
+
 import java.awt.SystemColor;
 import java.awt.GridLayout;
-import javax.swing.JLabel;
-import javax.swing.ImageIcon;
-import javax.swing.SwingConstants;
 import java.awt.Toolkit;
 import java.awt.CardLayout;
 import java.awt.event.ActionListener;
@@ -29,9 +23,6 @@ import java.util.Date;
 import java.util.Vector;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
-import javax.swing.JTable;
-import javax.swing.JScrollPane;
-import javax.swing.SpringLayout;
 import java.awt.FlowLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -62,6 +53,7 @@ public class dashboard extends JFrame {
     private JLabel dateTimeLabel;
     private JTable table;
     private JTable thrusttbl;
+    private JComboBox<String> discipline; 
 
     
    
@@ -452,23 +444,25 @@ public class dashboard extends JFrame {
         btnNewButton_1_1_1.setBounds(586, 83, 261, 35);
         research.add(btnNewButton_1_1_1);
         
-        JComboBox filtercombo_1 = new JComboBox();
-        filtercombo_1.addItem("CAH");
-        filtercombo_1.addItem("PSS");
-        filtercombo_1.addItem("BIT");
-        filtercombo_1.addItem("HKSS");
-        filtercombo_1.addItem("ET");
-        filtercombo_1.addItem("PIS");
-        filtercombo_1.addItem("UPPB");
-        filtercombo_1.addItem("MB");
-        filtercombo_1.addItem("GIES");
-        filtercombo_1.addItem("RE");
-        filtercombo_1.addItem("ASSST"); 
-        filtercombo_1.addItem("ECCS");
-        filtercombo_1.addItem("DSSA");
-        filtercombo_1.addActionListener(new ActionListener() {
+        discipline = new JComboBox<>();
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/rdc-rms", "root", "")) {
+            // Query the database to fetch discipline data
+            String query = "SELECT abbreviation FROM research_thrust";
+            PreparedStatement statement = connection.prepareStatement(query);
+            ResultSet resultSet = statement.executeQuery();
+
+            // Populate the dropdown with the retrieved data
+            while (resultSet.next()) {
+                String disciplineName = resultSet.getString("abbreviation");
+                discipline.addItem(disciplineName);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        discipline.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String filter = filtercombo_1.getSelectedItem().toString();
+                String filter = discipline.getSelectedItem().toString();
                 
                 if (!"SELECT".equals(filter)) {
                     try {
@@ -522,8 +516,8 @@ public class dashboard extends JFrame {
                 }
             }
         });
-        filtercombo_1.setBounds(384, 83, 192, 35);
-        research.add(filtercombo_1);
+        discipline.setBounds(384, 83, 192, 35);
+        research.add(discipline);
         
         
         JComboBox sortcombo_1 = new JComboBox();
@@ -718,15 +712,15 @@ public class dashboard extends JFrame {
         	public void mouseClicked(MouseEvent e) {
         		
         		  if (e.getClickCount() == 2) { // Detect double-click
-        	            int selectedRow = researchtbl.getSelectedRow();
+        	            int selectedRow = thrusttbl.getSelectedRow();
         	            if (selectedRow >= 0) {
         	                // Get the selected faculty's data from the table model
-        	                String paperid = researchtableModel.getValueAt(selectedRow, 0).toString();
-        	                String papertitle = researchtableModel.getValueAt(selectedRow, 1).toString();
-        	                String paperfaculty = researchtableModel.getValueAt(selectedRow, 2).toString();
+        	                String abb = thrusttblModel.getValueAt(selectedRow, 0).toString();
+        	                String name = thrusttblModel.getValueAt(selectedRow, 1).toString();
+        	                String desc = thrusttblModel.getValueAt(selectedRow, 2).toString();
 //        	         
-        	                researchDetails researchDetails = new researchDetails(paperid, papertitle);
-        	                researchDetails.setVisible(true);
+        	                thrustDetails thrustDetails = new thrustDetails(abb, name, desc);
+        	                thrustDetails.setVisible(true);
         	            }
         	        }
         	}

@@ -50,6 +50,7 @@ public class addnewresearch extends JFrame {
     private ArrayList<String> name = new ArrayList<>();
     private ArrayList<String> authorlist = new ArrayList<>();
     private ArrayList<String> authorname = new ArrayList<>();
+    private JComboBox<String> discipline; 
 
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
@@ -115,20 +116,13 @@ public class addnewresearch extends JFrame {
         author_txtfld.setBounds(139, 257, 559, 33);
         contentPane.add(author_txtfld);
         
-        
-        
-        
-
-       
-
         JButton btnNewButton_1 = new JButton("ADD");
         btnNewButton_1.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		
-        		String author = author_txtfld.getText();
+            public void actionPerformed(ActionEvent e) {
+                String author = author_txtfld.getText();
                 try {
                     Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/rdc-rms", "root", "");
-                    
+
                     // Check if the author exists in the database
                     PreparedStatement checkStatement = connection.prepareStatement("SELECT id, college, department FROM faculty WHERE name = ?");
                     checkStatement.setString(1, author);
@@ -139,26 +133,32 @@ public class addnewresearch extends JFrame {
                         String authorId = resultSet.getString("id");
                         String college = resultSet.getString("college");
                         String department = resultSet.getString("department");
-                        
+
                         // Add the data to the table
-                        tableModel.addRow(new Object[] { authorId, author, college, department });
-                        
+                        tableModel.addRow(new Object[]{authorId, author, college, department});
+
                         author_txtfld.setText("");
-                        
+
                         // Store the ID in another table (you should implement this part)
                         // PreparedStatement insertStatement = connection.prepareStatement("INSERT INTO other_table (author_id) VALUES (?)");
                         // insertStatement.setInt(1, authorId);
                         // insertStatement.executeUpdate();
                     } else {
                         // Author does not exist
-                        // Display an alert or message to the user
+                        int choice = JOptionPane.showConfirmDialog(null, "Author doesn't exist. Do you want to add a new author?", "Author Not Found", JOptionPane.YES_NO_OPTION);
+                        if (choice == JOptionPane.YES_OPTION) {
+                            // Open a new window to add a new author
+                            addnewfaculty addnewfaculty = new addnewfaculty(connection);
+                            addnewfaculty.setVisible(true);
+                        }
                     }
                 } catch (SQLException e1) {
                     e1.printStackTrace();
                 }
-        		
-        	}
+            }
         });
+        btnNewButton_1.setBounds(708, 257, 90, 33);
+        contentPane.add(btnNewButton_1);
         btnNewButton_1.setBounds(708, 257, 90, 33);
         contentPane.add(btnNewButton_1);
 
@@ -174,28 +174,23 @@ public class addnewresearch extends JFrame {
         scrollPane.setBounds(48, 313, 750, 230);
         contentPane.add(scrollPane);
         
-        JComboBox discipline = new JComboBox();
+        discipline = new JComboBox<>();
         discipline.setBounds(139, 144, 226, 33);
         contentPane.add(discipline);
         
-        Map<String, String> disciplineCodeMap = new HashMap<>();
-        disciplineCodeMap.put("CAH - Culture, Arts, and Humanities", "CAH");
-        disciplineCodeMap.put("PSS - Psychology & Social Sciences", "PSS");
-        disciplineCodeMap.put("BIT - Business Innovation & Technopreneurship", "BIT");
-        disciplineCodeMap.put("HKSS - Human Kinetics & Sports Science", "HKSS");
-        disciplineCodeMap.put("ET - Engineering & Technology", "ET");
-        disciplineCodeMap.put("PIS - Policy & International Studies", "PIS");
-        disciplineCodeMap.put("UPPB - Urban Agriculture & Plant Biotechnology", "UPPB");
-        disciplineCodeMap.put("MB - Mushroom Biotechnology ", "MB");
-        disciplineCodeMap.put("GIES - Gender & Inclusive Education Studies", "GIES");
-        disciplineCodeMap.put("RE - Research to Extension", "RE");
-        disciplineCodeMap.put("ASSST - Astronomy & Space Science Satellite Technology", "ASST"); 
-        disciplineCodeMap.put("ECCS - Environmental & Climate Change Studies", "ECCS");
-        disciplineCodeMap.put("DSSA - Data Science & Smart Analytics", "DSSA");
-  
-        
-        for (String disciplineName : disciplineCodeMap.keySet()) {
-            discipline.addItem(disciplineName);
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/rdc-rms", "root", "")) {
+            // Query the database to fetch discipline data
+            String query = "SELECT abbreviation FROM research_thrust";
+            PreparedStatement statement = connection.prepareStatement(query);
+            ResultSet resultSet = statement.executeQuery();
+
+            // Populate the dropdown with the retrieved data
+            while (resultSet.next()) {
+                String disciplineName = resultSet.getString("abbreviation");
+                discipline.addItem(disciplineName);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         
  
@@ -244,13 +239,12 @@ public class addnewresearch extends JFrame {
         btnNewButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             	
-            	String selectedItem = discipline.getSelectedItem().toString();
-            	String disciplinecode = disciplineCodeMap.get(selectedItem);
+            	String selectedDiscipline =  discipline.getSelectedItem().toString();
             	String selectedmonth = month.getSelectedItem().toString();
             	String monthcode = monthCodeMap.get(selectedmonth);
             	int selectedYear = year.getYear();
             	String count = number.getValue().toString();
-            	String final_id = disciplinecode + " - " + monthcode + " - " + selectedYear + " - " + count;
+            	String final_id = selectedDiscipline + " - " + monthcode + " - " + selectedYear + " - " + count;
             	String title = textField_1.getText();
             	String status = "Ongoing";
 

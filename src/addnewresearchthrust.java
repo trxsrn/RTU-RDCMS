@@ -158,6 +158,11 @@ public class addnewresearchthrust extends JFrame {
 		contentPane.add(btnNewButton);
 		
 		JButton btnCancel = new JButton("CANCEL");
+		btnCancel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+			}
+		});
 		btnCancel.setBounds(33, 309, 85, 21);
 		contentPane.add(btnCancel);
 	}
