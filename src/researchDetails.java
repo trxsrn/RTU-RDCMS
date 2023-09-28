@@ -109,27 +109,62 @@ public class researchDetails extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) { // Detect double-click
-                    int selectedRow = authorstbl.getSelectedRow();
-                    if (selectedRow >= 0) {
-                        // Get the selected faculty's data from the table model
-                        int response = JOptionPane.showConfirmDialog(
-                                null, // Use the appropriate parent component
-                                "Do you want to remove this author?",
-                                "Confirm Removal",
-                                JOptionPane.YES_NO_OPTION);
+                	
+                	 int selectedRow = authorstbl.getSelectedRow();
+     	            if (selectedRow >= 0) {
+     	                // Get the selected faculty's data from the table model
+     	                String facultyid = authorstbl.getValueAt(selectedRow, 0).toString();
+//     	         
+     	               int response = JOptionPane.showConfirmDialog(
+     	                        null, // Use the appropriate parent component
+     	                        "Do you want to remove this author?",
+     	                        "Confirm Removal",
+     	                        JOptionPane.YES_NO_OPTION);
 
-                        if (response == JOptionPane.YES_OPTION) {
-                            // User confirmed removal; perform removal from the database
-                            removeAuthor(selectedRow); // You need to implement this method
-                        }
-                    }
+     	                if (response == JOptionPane.YES_OPTION) {
+     	                	
+     	                	 try {
+     	      	                   
+           	                    
+           	                    // Establish a database connection (You should replace these placeholders)
+           	                    Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/rdc-rms", "root", "");
+           	                    
+           	                    // Define the SQL DELETE statement
+           	                    String deleteQuery = "DELETE FROM research_faculty WHERE faculty = ?";
+           	                    
+           	                    // Create a PreparedStatement to execute the query
+           	                    PreparedStatement preparedStatement = connection.prepareStatement(deleteQuery);
+           	                    
+           	                    // Set the parameter for the faculty_id
+           	                    preparedStatement.setString(1, facultyid);
+           	                    
+           	                    // Execute the DELETE statement
+           	                    int rowsDeleted = preparedStatement.executeUpdate();
+           	                    
+           	                    JOptionPane.showMessageDialog(null, "Author sucessfully removed!", "SUCCESS", JOptionPane.INFORMATION_MESSAGE);
+           	                    
+           	                    loadAuthors(paperid);
+           	                    
+           	                    // Close the PreparedStatement and the database connection
+           	                    preparedStatement.close();
+           	                    connection.close();
+           	                } catch (SQLException ex) {
+           	                    ex.printStackTrace();
+           	                    JOptionPane.showMessageDialog(
+           	                        null,
+           	                        "Error removing author: " + ex.getMessage(),
+           	                        "Error",
+           	                        JOptionPane.ERROR_MESSAGE
+           	                    );
+           	                }
+     	                }
+     	                
+    	            	
+     	            }
+                	
+
                 }
             }
-
-			private void removeAuthor(int selectedRow) {
-				// TODO Auto-generated method stub
-				
-			}
         });
         scrollPane.setViewportView(authorstbl);
 
@@ -294,6 +329,17 @@ public class researchDetails extends JFrame {
                 JButton btnNewButton = new JButton("SAVE CHANGES");
                 btnNewButton.setBounds(278, 791, 182, 21);
                 contentPane.add(btnNewButton);
+                
+                JButton btnNewButton_1 = new JButton("ADD PROPONENT");
+                btnNewButton_1.addActionListener(new ActionListener() {
+                	public void actionPerformed(ActionEvent e) {
+                		
+                		
+                	}
+                });
+                btnNewButton_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
+                btnNewButton_1.setBounds(533, 200, 189, 22);
+                contentPane.add(btnNewButton_1);
                 
          loadAuthors(paperid);
     }
