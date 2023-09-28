@@ -218,7 +218,7 @@ public class addnewfaculty extends JFrame {
 	                    preparedStatement.executeUpdate();
 	                    
 	                 // After successfully inserting data into the database
-	                    parentDashboard.refreshTable(); //
+	                    parentDashboard.refreshFacultyTable(); //
 	              
 	                    JOptionPane.showMessageDialog(null, "Addition was successful!", "SUCCESS", JOptionPane.INFORMATION_MESSAGE);
 

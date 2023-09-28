@@ -54,7 +54,8 @@ public class addnewresearch extends JFrame {
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
             try {
-                addnewresearch frame = new addnewresearch();
+            	dashboard parentDashboard = new dashboard();
+                addnewresearch frame = new addnewresearch(parentDashboard);
                 frame.setVisible(true);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -62,7 +63,7 @@ public class addnewresearch extends JFrame {
         });
     }
 
-    public addnewresearch() {
+    public addnewresearch(dashboard parentDashboard) {
         initializeDatabaseConnection();
         populateNameList();
 
@@ -310,7 +311,9 @@ public class addnewresearch extends JFrame {
 
             		if (rowsInsertedSummary > 0) {
             			 JOptionPane.showMessageDialog(null, "Addition was successful!", "SUCCESS", JOptionPane.INFORMATION_MESSAGE);
+            			 parentDashboard.refreshResearchTable(); //
  	                    dispose();
+ 	                    
             		} else {
             		    System.out.println("Data insertion failed for research_summary.");
             		}
@@ -341,7 +344,7 @@ public class addnewresearch extends JFrame {
                 lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
     }
 
-    private void initializeDatabaseConnection() {
+	private void initializeDatabaseConnection() {
         try {
             conn = DriverManager.getConnection("jdbc:mysql://localhost/rdc-rms", "root", "");
         } catch (SQLException e) {

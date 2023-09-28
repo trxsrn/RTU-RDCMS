@@ -1,26 +1,31 @@
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JTable;
-import javax.swing.JLabel;
 import java.awt.Font;
-import javax.swing.JScrollPane;
-import java.awt.FlowLayout;
 import java.awt.SystemColor;
-import javax.swing.ImageIcon;
-import javax.swing.JTextField;
-import java.awt.Color;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 
 public class facultyDetails extends JFrame {
 
     private JPanel contentPane;
     private JTable table;
-    private JButton selectedButton = null;
+    private DefaultTableModel individualresearch;
 
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
@@ -36,7 +41,7 @@ public class facultyDetails extends JFrame {
     }
 
     public facultyDetails(String faculty_Id, String faculty_Name, String faculty_Affiliation, String faculty_College, String faculty_Department) {
-    	setTitle("FACULTY DETAILS");
+        setTitle("FACULTY DETAILS");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setBounds(100, 100, 1200, 790);
         contentPane = new JPanel();
@@ -50,7 +55,8 @@ public class facultyDetails extends JFrame {
         scrollPane.setPreferredSize(new Dimension(1078, 281));
         contentPane.add(scrollPane);
 
-        table = new JTable();
+        individualresearch = new DefaultTableModel();
+        table = new JTable(individualresearch);
         scrollPane.setViewportView(table);
 
         JLabel lblNewLabel_1 = new JLabel("FACULTY ID");
@@ -109,58 +115,70 @@ public class facultyDetails extends JFrame {
         facultyDept.setForeground(Color.BLACK);
         facultyDept.setBounds(279, 241, 278, 19);
         contentPane.add(facultyDept);
-        
+
         JLabel lblNewLabel = new JLabel("");
         lblNewLabel.setIcon(new ImageIcon("C:\\xampp\\htdocs\\TRR\\css\\img\\RDC logo 2.png"));
         lblNewLabel.setBounds(872, 36, 160, 191);
         contentPane.add(lblNewLabel);
-        
-        
+
         JButton savebtn = new JButton("SAVE");
         savebtn.setEnabled(false);
         savebtn.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		
-        		selectButton();
-                facultyName.setEnabled(false);
-                facultyAffiliation.setEnabled(false);
-                facultyDept.setEnabled(false);
-                
-                facultyName.setEditable(false);
-                facultyAffiliation.setEditable(false);
-                facultyDept.setEditable(false);
-        	}
+            public void actionPerformed(ActionEvent e) {
+                // You can add save functionality here if needed
+            }
         });
         savebtn.setBounds(827, 237, 125, 33);
         contentPane.add(savebtn);
-        
+
         JButton editbtn = new JButton("EDIT");
         editbtn.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		
-        		selectButton();
-        		
-                facultyName.setEnabled(true);
-                facultyAffiliation.setEnabled(true);
-                facultyDept.setEnabled(true);
-                
-                facultyName.setEditable(true);
-                facultyAffiliation.setEditable(true);
-                facultyDept.setEditable(true);
-                
-        	}
+            public void actionPerformed(ActionEvent e) {
+                // You can add edit functionality here if needed
+            }
         });
         editbtn.setBounds(962, 237, 125, 33);
         contentPane.add(editbtn);
-    }
-    
-    private void selectButton() {
-        if (selectedButton != null) {
-            selectedButton.setEnabled(true);
-            
-        }
-        
-   // You can set it to savebtn or editbtn as needed.
+
+        // Load research data into the table
+        loadResearchData(faculty_Id);
     }
 
+    private void loadResearchData(String faculty_Id) {
+        // Define your database connection parameters
+
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/rdc-rms", "root", "");
+                ) {
+            // Prepare an SQL query to retrieve research data based on faculty ID
+            String sql = "SELECT * FROM research_faculty WHERE faculty = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, faculty_Id);
+
+            // Execute the query and retrieve the result set
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            // Create a DefaultTableModel to hold the research data
+            DefaultTableModel researchModel = new DefaultTableModel();
+
+            // Add columns to the table model (you should adjust column names accordingly)
+            researchModel.addColumn("Paper ID");
+            researchModel.addColumn("Title");
+            researchModel.addColumn("Status");
+
+            // Populate the table model with data from the result set
+            while (resultSet.next()) {
+            	 String id = resultSet.getString("paper_id");
+                String title = resultSet.getString("title");
+                String status = resultSet.getString("status");
+
+                // Add a row to the table model
+                researchModel.addRow(new String[] { id, title, status });
+            }
+
+            // Set the table model for your JTable
+            table.setModel(researchModel);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

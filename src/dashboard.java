@@ -39,6 +39,7 @@ import java.awt.Font;
 import java.awt.BorderLayout;
 import com.toedter.calendar.JCalendar;
 import java.awt.Label;
+import java.awt.Button;
 
 public class dashboard extends JFrame {
 	
@@ -48,6 +49,7 @@ public class dashboard extends JFrame {
     private JTable researchtbl;
     private DefaultTableModel facultytableModel;
     private DefaultTableModel researchtableModel;
+    private DefaultTableModel thrusttblModel;
     
 
     Connection con = null;
@@ -59,6 +61,7 @@ public class dashboard extends JFrame {
     private JTable table_1;
     private JLabel dateTimeLabel;
     private JTable table;
+    private JTable thrusttbl;
 
     
    
@@ -430,7 +433,7 @@ public class dashboard extends JFrame {
         btnNewButton_1_2.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		
-        		addnewresearch addnewresearch = new addnewresearch();
+        		addnewresearch addnewresearch = new addnewresearch(dashboard.this);
     			addnewresearch.setVisible(true);
         	}
         });
@@ -678,16 +681,57 @@ public class dashboard extends JFrame {
         lblNewLabel_3_2.setBounds(25, 20, 245, 32);
         panel_1_2.add(lblNewLabel_3_2);
         
-        JLabel lblNewLabel_4_1 = new JLabel("New label");
-        lblNewLabel_4_1.setForeground(SystemColor.text);
-        lblNewLabel_4_1.setFont(new Font("Tahoma", Font.PLAIN, 20));
-        lblNewLabel_4_1.setBounds(995, 32, 101, 13);
-        panel_1_2.add(lblNewLabel_4_1);
-        
         JPanel panel_3 = new JPanel();
         panel_3.setBounds(0, 74, 1152, 722);
         manage.add(panel_3);
         panel_3.setLayout(null);
+        
+        Label label = new Label("Research Thrust");
+        label.setBounds(39, 40, 184, 21);
+        panel_3.add(label);
+        
+        Button button = new Button("New button");
+        button.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		
+        		addnewresearchthrust addnewresearchthrust = new addnewresearchthrust(dashboard.this);
+        		addnewresearchthrust.setVisible(true);
+        		
+        	}
+        });
+        button.setBounds(982, 40, 108, 21);
+        panel_3.add(button);
+        
+        JScrollPane scrollPane = new JScrollPane();
+        scrollPane.setBounds(39, 78, 1057, 265);
+        panel_3.add(scrollPane);
+        
+        thrusttblModel = new DefaultTableModel();
+        thrusttbl = new JTable(thrusttblModel) {
+        	@Override
+        	public boolean isCellEditable(int row, int column) {
+        		return false;
+        	}
+        };
+        thrusttbl.addMouseListener(new MouseAdapter() {
+        	@Override
+        	public void mouseClicked(MouseEvent e) {
+        		
+        		  if (e.getClickCount() == 2) { // Detect double-click
+        	            int selectedRow = researchtbl.getSelectedRow();
+        	            if (selectedRow >= 0) {
+        	                // Get the selected faculty's data from the table model
+        	                String paperid = researchtableModel.getValueAt(selectedRow, 0).toString();
+        	                String papertitle = researchtableModel.getValueAt(selectedRow, 1).toString();
+        	                String paperfaculty = researchtableModel.getValueAt(selectedRow, 2).toString();
+//        	         
+        	                researchDetails researchDetails = new researchDetails(paperid, papertitle);
+        	                researchDetails.setVisible(true);
+        	            }
+        	        }
+        	}
+        });
+        scrollPane.setViewportView(thrusttbl);
         
         JPanel settings = new JPanel();
         content.add(settings, "name_33385328022900");
@@ -776,7 +820,7 @@ public class dashboard extends JFrame {
     	        content.add(manage);
     	        content.revalidate();
     	        content.repaint();
-    	        loadFacultyData();
+    	        loadResearchThrust();
         	}
         });
         managebtn.setForeground(SystemColor.text);
@@ -840,6 +884,12 @@ public class dashboard extends JFrame {
         autoupdate_research.loadResearchData(researchtableModel);
     }
     
+    private void loadResearchThrust() {
+        // Call the loadFacultyData method from the FacultyDataAccess class
+    	thrusttblModel.setRowCount(0);
+        load_researchthrust.loadResearchThrust(thrusttblModel);
+    }
+    
     private void selectButton(JButton button) {
         if (selectedButton != null) {
             selectedButton.setBackground(SystemColor.textHighlight);
@@ -849,8 +899,18 @@ public class dashboard extends JFrame {
     }
 
     
-    void refreshTable() {
+    void refreshFacultyTable() {
         facultytableModel.setRowCount(0); // Clear the current table data
         loadFacultyData(); // Load the updated faculty data
+    }
+    
+    void refreshResearchTable() {
+        researchtableModel.setRowCount(0); // Clear the current table data
+        loadResearchData(); // Load the updated faculty data
+    }
+    
+    void refreshThrustTable() {
+    	thrusttblModel.setRowCount(0); // Clear the current table data
+    	loadResearchThrust(); // Load the updated faculty data
     }
 }
