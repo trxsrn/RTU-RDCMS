@@ -6,6 +6,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JTable;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -97,7 +99,38 @@ public class researchDetails extends JFrame {
         contentPane.add(scrollPane);
 
         authorstableModel = new DefaultTableModel();
-        authorstbl = new JTable(authorstableModel);	
+        authorstbl = new JTable(authorstableModel) {
+        	@Override
+        	public boolean isCellEditable(int row, int column) {
+        		return false;
+        	}
+        };
+        authorstbl.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) { // Detect double-click
+                    int selectedRow = authorstbl.getSelectedRow();
+                    if (selectedRow >= 0) {
+                        // Get the selected faculty's data from the table model
+                        int response = JOptionPane.showConfirmDialog(
+                                null, // Use the appropriate parent component
+                                "Do you want to remove this author?",
+                                "Confirm Removal",
+                                JOptionPane.YES_NO_OPTION);
+
+                        if (response == JOptionPane.YES_OPTION) {
+                            // User confirmed removal; perform removal from the database
+                            removeAuthor(selectedRow); // You need to implement this method
+                        }
+                    }
+                }
+            }
+
+			private void removeAuthor(int selectedRow) {
+				// TODO Auto-generated method stub
+				
+			}
+        });
         scrollPane.setViewportView(authorstbl);
 
         JLabel lblNewLabel_1_1 = new JLabel("RESEARCH TITLE");

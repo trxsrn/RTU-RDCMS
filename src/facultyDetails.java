@@ -56,7 +56,12 @@ public class facultyDetails extends JFrame {
         contentPane.add(scrollPane);
 
         individualresearch = new DefaultTableModel();
-        table = new JTable(individualresearch);
+        table = new JTable(individualresearch) {
+        	@Override
+        	public boolean isCellEditable(int row, int column) {
+        		return false;
+        	}
+        };
         scrollPane.setViewportView(table);
 
         JLabel lblNewLabel_1 = new JLabel("FACULTY ID");
