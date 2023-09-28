@@ -41,7 +41,7 @@ public class addnewfaculty extends JFrame {
 	                dashboard parentDashboard = new dashboard(); // Replace 'dashboard' with your actual class name
 
 	                // Pass the dashboard object as an argument
-	                addnewfaculty frame = new addnewfaculty(parentDashboard);
+	                addnewfaculty frame = new addnewfaculty(connection, parentDashboard);
 	                frame.setVisible(true);
 	            } catch (Exception e) {
 	                e.printStackTrace();
@@ -54,7 +54,7 @@ public class addnewfaculty extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public addnewfaculty(dashboard parentDashboard) {
+	public addnewfaculty(Connection connection, dashboard parentDashboard) {
 		setTitle("ADD NEW FACULTY");
 		this.parentDashboard = parentDashboard;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -248,8 +248,8 @@ public class addnewfaculty extends JFrame {
 		lblNewLabel_3.setBounds(153, 58, 191, 174);
 		contentPane.add(lblNewLabel_3);
 	}
-	
-	 private String generateUniqueFacultyID() throws SQLException {
+
+	private String generateUniqueFacultyID() throws SQLException {
 	        Connection connection = dbConnection.getConnection();
 	        String facultyID = null;
 	        boolean isUnique = false;

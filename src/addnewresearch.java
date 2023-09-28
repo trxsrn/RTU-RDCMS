@@ -139,16 +139,13 @@ public class addnewresearch extends JFrame {
 
                         author_txtfld.setText("");
 
-                        // Store the ID in another table (you should implement this part)
-                        // PreparedStatement insertStatement = connection.prepareStatement("INSERT INTO other_table (author_id) VALUES (?)");
-                        // insertStatement.setInt(1, authorId);
-                        // insertStatement.executeUpdate();
+                 
                     } else {
                         // Author does not exist
                         int choice = JOptionPane.showConfirmDialog(null, "Author doesn't exist. Do you want to add a new author?", "Author Not Found", JOptionPane.YES_NO_OPTION);
                         if (choice == JOptionPane.YES_OPTION) {
                             // Open a new window to add a new author
-                            addnewfaculty addnewfaculty = new addnewfaculty(connection);
+                            addnewfaculty addnewfaculty = new addnewfaculty(connection, parentDashboard);
                             addnewfaculty.setVisible(true);
                         }
                     }
