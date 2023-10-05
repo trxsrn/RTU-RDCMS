@@ -25,6 +25,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
@@ -41,6 +42,7 @@ import javax.swing.JTextArea;
 
 public class addnewresearch extends JFrame {
 
+	private connection dbConnection;
     private JPanel contentPane;
     private JTextArea textField_1;
     private JTextField author_txtfld;
@@ -51,7 +53,11 @@ public class addnewresearch extends JFrame {
     private ArrayList<String> authorlist = new ArrayList<>();
     private ArrayList<String> authorname = new ArrayList<>();
     private JComboBox<String> discipline; 
-
+    private String selectedDiscipline;
+    private int selectedYear;
+    private String selectedMonthCode;
+    private JSpinner number;
+    
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
             try {
@@ -86,14 +92,30 @@ public class addnewresearch extends JFrame {
         lblNewLabel_1_1.setBounds(48, 267, 81, 13);
         contentPane.add(lblNewLabel_1_1);
         
+//      RESEARCH TITLE  
         JScrollPane scrollPane_1 = new JScrollPane();
         scrollPane_1.setBounds(139, 187, 659, 60);
         contentPane.add(scrollPane_1);
-
+        
+        //TITLE PART TEXTFIELD
         textField_1 = new JTextArea();
         scrollPane_1.setViewportView(textField_1);
         textField_1.setColumns(10);
+        
+        // Create a table model with a single column for authors
+        tableModel = new DefaultTableModel();
+        tableModel.addColumn("ID");
+        tableModel.addColumn("Author Name");
+        tableModel.addColumn("College");
+        tableModel.addColumn("Department");
 
+        table = new JTable(tableModel);
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setBounds(48, 313, 750, 230);
+        contentPane.add(scrollPane);
+
+
+        //AUTOCOMPLETE AUTHOR NAMES
         author_txtfld = new JTextField();
         author_txtfld.addKeyListener(new KeyAdapter() {
             @Override
@@ -116,6 +138,7 @@ public class addnewresearch extends JFrame {
         author_txtfld.setBounds(139, 257, 559, 33);
         contentPane.add(author_txtfld);
         
+        //ADD AUTHOR IN THE LIST OF THE PROPONENTS
         JButton btnNewButton_1 = new JButton("ADD");
         btnNewButton_1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -159,17 +182,11 @@ public class addnewresearch extends JFrame {
         btnNewButton_1.setBounds(708, 257, 90, 33);
         contentPane.add(btnNewButton_1);
 
-        // Create a table model with a single column for authors
-        tableModel = new DefaultTableModel();
-        tableModel.addColumn("ID");
-        tableModel.addColumn("Author Name");
-        tableModel.addColumn("College");
-        tableModel.addColumn("Department");
-
-        table = new JTable(tableModel);
-        JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setBounds(48, 313, 750, 230);
-        contentPane.add(scrollPane);
+        
+        JLabel lblNewLabel_1_1_1 = new JLabel("PAPER ID");
+        lblNewLabel_1_1_1.setForeground(SystemColor.text);
+        lblNewLabel_1_1_1.setBounds(48, 154, 81, 13);
+        contentPane.add(lblNewLabel_1_1_1);
         
         discipline = new JComboBox<>();
         discipline.setBounds(139, 144, 226, 33);
@@ -190,25 +207,6 @@ public class addnewresearch extends JFrame {
             e.printStackTrace();
         }
         
- 
-        
-        JLabel lblNewLabel_1_1_1 = new JLabel("PAPER ID");
-        lblNewLabel_1_1_1.setForeground(SystemColor.text);
-        lblNewLabel_1_1_1.setBounds(48, 154, 81, 13);
-        contentPane.add(lblNewLabel_1_1_1);
-        
-        JYearChooser year = new JYearChooser();
-        year.setBounds(554, 144, 112, 33);
-        contentPane.add(year);
-        
-        JSpinner number = new JSpinner();
-        number.setBounds(676, 144, 122, 33);
-        contentPane.add(number);
-        
-        JComboBox month = new JComboBox();
-        month.setBounds(375, 144, 169, 33);
-        contentPane.add(month);
-        
         Map<String, String> monthCodeMap = new HashMap<>();
         monthCodeMap.put("January", "1");
         monthCodeMap.put("February", "2");
@@ -219,29 +217,126 @@ public class addnewresearch extends JFrame {
         monthCodeMap.put("July", "7");
         monthCodeMap.put("August", "8");
         monthCodeMap.put("September", "9");
-        monthCodeMap.put("November", "10");
-        monthCodeMap.put("December", "11");
-  
+        monthCodeMap.put("October", "10");
+        monthCodeMap.put("November", "11");
+        monthCodeMap.put("December", "12");
+        
+        JYearChooser year = new JYearChooser();
+        year.setBounds(554, 144, 112, 33);
+        contentPane.add(year);
+        
+        number = new JSpinner();
+        number.setBounds(676, 144, 122, 33);
+        contentPane.add(number);
+        
+        SpinnerNumberModel spinnerModel = new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1);
+        number.setModel(spinnerModel);
+
+        JComboBox month = new JComboBox();
+        month.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		
+        		 selectedDiscipline = discipline.getSelectedItem().toString();
+
+                 // Get the current month and year from the UI components
+                 int selectedMonth = month.getSelectedIndex() + 1; // Month is 0-based index
+                 selectedYear = year.getYear();
+
+                 // Query the database to fetch the last count for the selected discipline, month, and year
+                 try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/rdc-rms", "root", "")) {
+                 	String query = "SELECT MAX(CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(paper_id, ' - ', -2), ' - ', -1) AS UNSIGNED)) " +
+                             "FROM research_summary WHERE SUBSTRING_INDEX(paper_id, ' - ', 1) = ? " +
+                             "AND SUBSTRING_INDEX(SUBSTRING_INDEX(paper_id, ' - ', -3), ' - ', -1) = ? " +
+                             "AND SUBSTRING_INDEX(SUBSTRING_INDEX(paper_id, ' - ', -2), ' - ', -3) = ?";
+                     PreparedStatement statement = connection.prepareStatement(query);
+                     statement.setString(1, selectedDiscipline);
+                     statement.setInt(2, selectedMonth);
+                     statement.setInt(3, selectedYear);
+
+                     ResultSet resultSet = statement.executeQuery();
+
+                     if (resultSet.next()) {
+                         // Get the last count from the database, increment it by 1 for the new entry, and set JSpinner value
+                         int lastCount = resultSet.getInt(1);
+                         int newCount = lastCount + 1;
+                         number.setValue(newCount);
+                     } else {
+                         // If no entry exists for the selected discipline, month, and year, set JSpinner value to 1
+                         number.setValue(1);
+                     }
+                 } catch (SQLException ex) {
+                     ex.printStackTrace();
+                 }
+        	}
+        });
+        month.setBounds(375, 144, 169, 33);
+        contentPane.add(month);
+        
         
         for (String monthName : monthCodeMap.keySet()) {
             month.addItem(monthName);
         }
         
         
-       
-        
-        JButton btnNewButton = new JButton("SUBMIT");
-        btnNewButton.setForeground(SystemColor.text);
-        btnNewButton.setBackground(new Color(0, 255, 0));
-        btnNewButton.addActionListener(new ActionListener() {
+     // Inside your discipline ActionListener
+        discipline.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-            	
-            	String selectedDiscipline =  discipline.getSelectedItem().toString();
+                selectedDiscipline = discipline.getSelectedItem().toString();
+                int selectedMonth = month.getSelectedIndex() + 1;
+                selectedYear = year.getYear();
+
+                try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/rdc-rms", "root", "")) {
+                    String query = "SELECT MAX(CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(paper_id, ' - ', -1), ' - ', -1) AS UNSIGNED)), " +
+                                   "SUBSTRING_INDEX(paper_id, ' - ', 1), " +
+                                   "SUBSTRING_INDEX(SUBSTRING_INDEX(paper_id, ' - ', -2), ' - ', -1), " +
+                                   "SUBSTRING_INDEX(paper_id, ' - ', -2) " +
+                                   "FROM research_summary WHERE SUBSTRING_INDEX(paper_id, ' - ', 1) = ? " +
+                                   "GROUP BY SUBSTRING_INDEX(paper_id, ' - ', 1), " +
+                                   "SUBSTRING_INDEX(SUBSTRING_INDEX(paper_id, ' - ', -2), ' - ', -1), " +
+                                   "SUBSTRING_INDEX(paper_id, ' - ', -2)";
+                    PreparedStatement statement = connection.prepareStatement(query);
+                    statement.setString(1, selectedDiscipline);
+
+                    ResultSet resultSet = statement.executeQuery();
+
+                    boolean found = false;
+
+                    while (resultSet.next()) {
+                        int lastCount = resultSet.getInt(1);
+                        String retrievedDiscipline = resultSet.getString(2);
+                        int retrievedMonth = resultSet.getInt(3);
+                        int retrievedYear = resultSet.getInt(4);
+
+                        if (retrievedDiscipline.equals(selectedDiscipline) &&
+                            retrievedMonth == selectedMonth &&
+                            retrievedYear == selectedYear) {
+                            int newCount = lastCount + 1;
+                            number.setValue(newCount);
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    if (!found) {
+                        number.setValue(1);
+                    }
+
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+        JButton btnNewButton = new JButton("SUBMIT");
+        btnNewButton.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		
+        		String selectedDiscipline =  discipline.getSelectedItem().toString();
             	String selectedmonth = month.getSelectedItem().toString();
             	String monthcode = monthCodeMap.get(selectedmonth);
             	int selectedYear = year.getYear();
-            	String count = number.getValue().toString();
-            	String final_id = selectedDiscipline + " - " + monthcode + " - " + selectedYear + " - " + count;
+            	String nextPaperIdCount = number.getValue().toString();
+            	String final_id = selectedDiscipline + " - " + monthcode + " - " + selectedYear + " - " + nextPaperIdCount;
             	String title = textField_1.getText();
             	String status = "Ongoing";
 
@@ -267,15 +362,8 @@ public class addnewresearch extends JFrame {
             		    // Execute the insert statement for each author
             		    int rowsInsertedFaculty = facultyStatement.executeUpdate();
 
-            		    if (rowsInsertedFaculty > 0) {
-            		        System.out.println("Data inserted successfully into research_faculty for author " + authorname);
-            		    } else {
-            		        System.out.println("Data insertion failed for research_faculty for author " + authorname);
-            		    }
             		}
 
-
-            	    // Insert data into the research_summary table
             		// Get the colleges and departments as lists
             		List<String> colleges = getCollegesAsList();
             		List<String> departments = getDepartmentsAsList();
@@ -301,6 +389,8 @@ public class addnewresearch extends JFrame {
             		int rowsInsertedSummary = summaryStatement.executeUpdate();
 
             		if (rowsInsertedSummary > 0) {
+            			System.out.println("Final ID: " + final_id); // Print the final_id
+            			System.out.println("SQL Query: " + summaryStatement);   // Print the SQL query
             			 JOptionPane.showMessageDialog(null, "Addition was successful!", "SUCCESS", JOptionPane.INFORMATION_MESSAGE);
             			 parentDashboard.refreshResearchTable(); //
  	                    dispose();
@@ -311,8 +401,10 @@ public class addnewresearch extends JFrame {
             	} catch (SQLException ex) {
             	    ex.printStackTrace();
             	}
-            }
+        	}
         });
+        btnNewButton.setForeground(SystemColor.text);
+        btnNewButton.setBackground(new Color(0, 255, 0));
         btnNewButton.setBounds(436, 569, 362, 33);
         contentPane.add(btnNewButton);
 
@@ -328,11 +420,11 @@ public class addnewresearch extends JFrame {
         contentPane.add(panel);
         panel.setLayout(null);
         
-                JLabel lblNewLabel = new JLabel("ADD NEW RESEARCH");
-                lblNewLabel.setBounds(295, 26, 277, 20);
-                panel.add(lblNewLabel);
-                lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-                lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
+	    JLabel lblNewLabel = new JLabel("ADD NEW RESEARCH");
+	    lblNewLabel.setBounds(295, 26, 277, 20);
+	    panel.add(lblNewLabel);
+	    lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+	    lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
     }
 
 	private void initializeDatabaseConnection() {
@@ -393,6 +485,4 @@ public class addnewresearch extends JFrame {
         }
         return departments;
     }
-
-
 }

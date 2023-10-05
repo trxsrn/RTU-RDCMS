@@ -38,9 +38,12 @@ public class dashboard extends JFrame {
 	private JPanel contentPane;
     private JTable facultytbl;
     private JTable researchtbl;
+    private JTable departmenttbl;
     private DefaultTableModel facultytableModel;
     private DefaultTableModel researchtableModel;
     private DefaultTableModel thrusttblModel;
+    private DefaultTableModel collegetblModel;
+    private DefaultTableModel DepartmenttblModel;
     
 
     Connection con = null;
@@ -54,6 +57,8 @@ public class dashboard extends JFrame {
     private JTable table;
     private JTable thrusttbl;
     private JComboBox<String> discipline; 
+    private JTable collegetbl;
+    private JTable table_2;
 
     
    
@@ -71,7 +76,6 @@ public class dashboard extends JFrame {
     }
 
     public dashboard() {
-    	setResizable(false);
     	setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\xampp\\htdocs\\TRR\\css\\img\\RDC logo 2.png"));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(0, 0, 1406, 843);
@@ -95,7 +99,7 @@ public class dashboard extends JFrame {
         menuPanel.add(lblNewLabel);
         
         JPanel panel = new JPanel();
-        panel.setBounds(0, 236, 232, 410);
+        panel.setBounds(0, 386, 232, 410);
         menuPanel.add(panel);
         panel.setLayout(new GridLayout(6, 1, 0, 0));
         
@@ -168,10 +172,6 @@ public class dashboard extends JFrame {
         btnNewButton_2.setBackground(Color.YELLOW);
         btnNewButton_2.setBounds(791, 684, 349, 29);
         panel_2.add(btnNewButton_2);
-        
-        JCalendar calendar = new JCalendar();
-        calendar.setBounds(795, 53, 347, 249);
-        panel_2.add(calendar);
         
         table = new JTable();
         table.setBounds(795, 312, 347, 167);
@@ -674,9 +674,12 @@ public class dashboard extends JFrame {
         lblNewLabel_3_2.setBounds(25, 20, 245, 32);
         panel_1_2.add(lblNewLabel_3_2);
         
+        JScrollPane scrollPane_2 = new JScrollPane();
+        scrollPane_2.setBounds(0, 74, 1152, 722);
+        manage.add(scrollPane_2);
+        
         JPanel panel_3 = new JPanel();
-        panel_3.setBounds(0, 74, 1152, 722);
-        manage.add(panel_3);
+        scrollPane_2.setViewportView(panel_3);
         panel_3.setLayout(null);
         
         Label label = new Label("Research Thrust");
@@ -696,9 +699,8 @@ public class dashboard extends JFrame {
         panel_3.add(button);
         
         JScrollPane scrollPane = new JScrollPane();
-        scrollPane.setBounds(39, 78, 1057, 265);
+        scrollPane.setBounds(39, 78, 1057, 146);
         panel_3.add(scrollPane);
-        
         thrusttblModel = new DefaultTableModel();
         thrusttbl = new JTable(thrusttblModel) {
         	@Override
@@ -726,6 +728,106 @@ public class dashboard extends JFrame {
         });
         scrollPane.setViewportView(thrusttbl);
         
+        Label label_2 = new Label("College");
+        label_2.setBounds(39, 244, 184, 21);
+        panel_3.add(label_2);
+        
+        Button button_1 = new Button("New button");
+        button_1.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		
+        		addnewcollege addnewcollege = new addnewcollege(dashboard.this);
+        		addnewcollege.setVisible(true);
+        	}
+        });
+        button_1.setBounds(982, 244, 108, 21);
+        panel_3.add(button_1);
+        
+        JScrollPane scrollPane_1 = new JScrollPane();
+        scrollPane_1.setBounds(39, 289, 1057, 146);
+        panel_3.add(scrollPane_1);
+        
+        collegetblModel = new DefaultTableModel();
+        collegetbl = new JTable(collegetblModel) {
+        	@Override
+        	public boolean isCellEditable(int row, int column) {
+        		return false;
+        	}
+        };
+        collegetbl.addMouseListener(new MouseAdapter() {
+        	@Override
+        	public void mouseClicked(MouseEvent e) {
+        		
+        		  if (e.getClickCount() == 2) { // Detect double-click
+        	            int selectedRow = collegetbl.getSelectedRow();
+        	            if (selectedRow >= 0) {
+        	                // Get the selected faculty's data from the table model
+        	                String abb = collegetblModel.getValueAt(selectedRow, 0).toString();
+        	                String name = collegetblModel.getValueAt(selectedRow, 1).toString();
+        	                String desc = collegetblModel.getValueAt(selectedRow, 2).toString();
+//        	         
+        	                collegeDetails collegeDetails = new collegeDetails(abb, name, desc);
+        	                collegeDetails.setVisible(true);
+        	            }
+        	        }
+        	}
+        });
+        scrollPane_1.setViewportView(collegetbl);
+        
+        Label label_2_1 = new Label("Department");
+        label_2_1.setBounds(39, 459, 184, 21);
+        panel_3.add(label_2_1);
+        
+        Button button_1_1 = new Button("New button");
+        button_1_1.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		
+        		addnewdepartment addnewdepartment = new addnewdepartment(dashboard.this);
+        		addnewdepartment.setVisible(true);
+  
+        	}
+        });
+        button_1_1.setBounds(982, 459, 108, 21);
+        panel_3.add(button_1_1);
+        
+        
+        
+        JScrollPane scrollPane_3 = new JScrollPane();
+        scrollPane_3.setBounds(39, 511, 1057, 146);
+        panel_3.add(scrollPane_3);
+        
+        DepartmenttblModel = new DefaultTableModel();
+        departmenttbl = new JTable(DepartmenttblModel) {
+        	/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
+        	public boolean isCellEditable(int row, int column) {
+        		return false;
+        	}
+        };
+        departmenttbl.addMouseListener(new MouseAdapter() {
+        	@Override
+        	public void mouseClicked(MouseEvent e) {
+        		
+        		  if (e.getClickCount() == 2) { // Detect double-click
+        	            int selectedRow = departmenttbl.getSelectedRow();
+        	            if (selectedRow >= 0) {
+        	                // Get the selected faculty's data from the table model
+        	                String college = DepartmenttblModel.getValueAt(selectedRow, 0).toString();
+        	                String name = DepartmenttblModel.getValueAt(selectedRow, 1).toString();
+//        	         
+        	            }
+        	        }
+        	}
+        });
+        scrollPane_3.setViewportView(departmenttbl);
+        
+        
+       
+        
         JPanel settings = new JPanel();
         content.add(settings, "name_33385328022900");
         settings.setLayout(null);
@@ -750,6 +852,8 @@ public class dashboard extends JFrame {
         panel_1_3.add(lblNewLabel_4_2);
         
         JButton dashboardbtn = new JButton("DASHBOARD");
+        dashboardbtn.setBorderPainted(false);
+        dashboardbtn.setHorizontalAlignment(SwingConstants.LEFT);
         dashboardbtn.setBackground(SystemColor.textHighlight);
         dashboardbtn.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
@@ -768,6 +872,8 @@ public class dashboard extends JFrame {
         dashboardbtn.setForeground(SystemColor.text);
         
         JButton researchbtn = new JButton("RESEARCH");
+        researchbtn.setBorderPainted(false);
+        researchbtn.setHorizontalAlignment(SwingConstants.LEFT);
         researchbtn.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		
@@ -786,6 +892,8 @@ public class dashboard extends JFrame {
         researchbtn.setBackground(SystemColor.textHighlight);
         
         JButton facultybtn = new JButton("FACULTY");
+        facultybtn.setBorderPainted(false);
+        facultybtn.setHorizontalAlignment(SwingConstants.LEFT);
         facultybtn.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		
@@ -804,6 +912,8 @@ public class dashboard extends JFrame {
         facultybtn.setBackground(SystemColor.textHighlight);
         
         JButton managebtn = new JButton("MANAGE ORGANIZATION");
+        managebtn.setBorderPainted(false);
+        managebtn.setHorizontalAlignment(SwingConstants.LEFT);
         managebtn.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		
@@ -814,6 +924,8 @@ public class dashboard extends JFrame {
     	        content.revalidate();
     	        content.repaint();
     	        loadResearchThrust();
+    	        loadCollege();
+    	        loadDepartment();
         	}
         });
         managebtn.setForeground(SystemColor.text);
@@ -821,6 +933,8 @@ public class dashboard extends JFrame {
         panel.add(managebtn);
         
         JButton settingsbtn = new JButton("SETTINGS");
+        settingsbtn.setBorderPainted(false);
+        settingsbtn.setHorizontalAlignment(SwingConstants.LEFT);
         settingsbtn.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		
@@ -838,13 +952,15 @@ public class dashboard extends JFrame {
         settingsbtn.setBackground(SystemColor.textHighlight);
         
         JButton logoutbtn = new JButton("LOGOUT");
+        logoutbtn.setBorderPainted(false);
+        logoutbtn.setHorizontalAlignment(SwingConstants.LEFT);
         logoutbtn.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		
         		
         	}
         });
-        logoutbtn.setBackground(new Color(255, 0, 0));
+        logoutbtn.setBackground(SystemColor.textHighlight);
         panel.add(logoutbtn);
         logoutbtn.setForeground(SystemColor.text);
         
@@ -883,6 +999,18 @@ public class dashboard extends JFrame {
         load_researchthrust.loadResearchThrust(thrusttblModel);
     }
     
+    private void loadCollege() {
+        // Call the loadFacultyData method from the FacultyDataAccess class
+    	collegetblModel.setRowCount(0);
+        loadcollege.loadCollege(collegetblModel);
+    }
+    
+    private void loadDepartment() {
+        // Call the loadFacultyData method from the FacultyDataAccess class
+    	DepartmenttblModel.setRowCount(0);
+        loadDepartment.loadDepartment(DepartmenttblModel);
+    }
+    
     private void selectButton(JButton button) {
         if (selectedButton != null) {
             selectedButton.setBackground(SystemColor.textHighlight);
@@ -905,5 +1033,15 @@ public class dashboard extends JFrame {
     void refreshThrustTable() {
     	thrusttblModel.setRowCount(0); // Clear the current table data
     	loadResearchThrust(); // Load the updated faculty data
+    }
+    
+    void refreshCollegeTable() {
+    	collegetblModel.setRowCount(0); // Clear the current table data
+    	loadCollege(); // Load the updated faculty data
+    }
+    
+    void refreshDepartmentTable() {
+    	DepartmenttblModel.setRowCount(0); // Clear the current table data
+    	loadDepartment(); // Load the updated faculty data
     }
 }

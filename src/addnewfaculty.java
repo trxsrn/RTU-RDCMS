@@ -13,6 +13,7 @@ import javax.swing.JComboBox;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -27,9 +28,13 @@ public class addnewfaculty extends JFrame {
 	private connection dbConnection;
 	private JPanel contentPane;
 	private JLabel idtxtfld;
-	private JTextField textField_1;
+	private JTextField nametxtfld;
 	private dashboard parentDashboard;
 	private int authorIDCounter = 1; 
+	private JComboBox<String> college_comboBox; 
+	private JComboBox department_comboBox;
+	private JTextField orgtxtfld;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -92,74 +97,157 @@ public class addnewfaculty extends JFrame {
 		contentPane.add(idtxtfld);
 		idtxtfld.setText(getNextAuthorID());
 		
-		textField_1 = new JTextField();
-		textField_1.setColumns(10);
-		textField_1.setBounds(196, 312, 252, 19);
-		contentPane.add(textField_1);
+		nametxtfld = new JTextField();
+		nametxtfld.setColumns(10);
+		nametxtfld.setBounds(196, 312, 252, 19);
+		contentPane.add(nametxtfld);
 		
-		JComboBox comboBox = new JComboBox();
-		JComboBox comboBox_1 = new JComboBox();
-		comboBox.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String affiliation = comboBox.getSelectedItem().toString();
+		
+		
+		college_comboBox = new JComboBox<>();
+		college_comboBox.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		    	
+		    	Object selectedAffiliationObj = college_comboBox.getSelectedItem();
 				
-				if("Research Trust".equals(affiliation))
-				{
-					comboBox_1.removeAllItems();
-					comboBox_1.addItem("DTE - Digital & Transfromative Education");
-					comboBox_1.addItem("CAH - Culture, Arts and Humanties");
-					comboBox_1.addItem("PSS - Psychology & Social Sciences");
-					comboBox_1.addItem("BIT - Business Innovation & Technopreneurship");
-					comboBox_1.addItem("HKSS - Human KInetics & Sports Science");
-					comboBox_1.addItem("ET - Engineering & Technology");
-					comboBox_1.addItem("PIS - Policy & International Studies");
-					comboBox_1.addItem("UAPB - Urban Agriculture & Plant Biotechnology");
-					comboBox_1.addItem("MB - Mushroom Biotechnology");
-					comboBox_1.addItem("GIS -  Gender & Inclusive Education Studies");
-					comboBox_1.addItem("R&E - Research to Extension");
-					comboBox_1.addItem("ASST -  Astronomy & Space Science Satellite Technology");
-					comboBox_1.addItem("ECCS - Environmental & Climate Change Studies");
-					comboBox_1.addItem("DSSA - Data Science & Smart Analytics");
-					lblNewLabel_2.setText("NAME");
-					
-				}
-				else if("Organization".equals(affiliation))
-				{
-					remove(comboBox);
-					getContentPane().add(textField_1 = new JTextField());
-				}
-				else
-				{
-					comboBox_1.removeAllItems();
-					comboBox_1.addItem("CEA");
-					comboBox_1.addItem("CED");
-					comboBox_1.addItem("CBEA");
-					comboBox_1.addItem("CAS");
-					comboBox_1.addItem("IPE");
-					comboBox_1.addItem("GS");
-				}
+		        if (selectedAffiliationObj != null) {
+		        	String selectedCollege = college_comboBox.getSelectedItem().toString();
+
+			        // Clear existing items in the department_comboBox
+			        department_comboBox.removeAllItems();
+
+			        // Fetch and populate the department_comboBox based on the selected college
+			        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/rdc-rms", "root", "")) {
+			            String query = "SELECT name FROM department WHERE college = ?";
+			            PreparedStatement statement = connection.prepareStatement(query);
+			            statement.setString(1, selectedCollege);
+			            ResultSet resultSet = statement.executeQuery();
+
+			            // Populate the department_comboBox with the retrieved department names
+			            while (resultSet.next()) {
+			                String departmentName = resultSet.getString("name");
+			                department_comboBox.addItem(departmentName);
+			            }
+			        } catch (SQLException ex) {
+			            ex.printStackTrace();
+			        }
+		        }
+		        
+		        else
+		        {
+//		        	JOptionPane.showMessageDialog(contentPane, "Please select an college.", "Error", JOptionPane.ERROR_MESSAGE);
+		        }
+		        // Get the selected college from the college_comboBox
+		        
+		    }
+		});
+
+		college_comboBox.setBounds(196, 394, 252, 21);
+		contentPane.add(college_comboBox);
+		
+		
+		 orgtxtfld = new JTextField();
+	     orgtxtfld.setColumns(10);
+	     orgtxtfld.setBounds(196, 394, 252, 21);
+		
+		department_comboBox = new JComboBox<>();
+		department_comboBox.setBounds(196, 440, 252, 21);
+		contentPane.add(department_comboBox);
+		
+		JComboBox<String> affiliation_comboBox = new JComboBox<String>();
+		affiliation_comboBox.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				college_comboBox.removeAllItems();
+				Object selectedAffiliationObj = affiliation_comboBox.getSelectedItem();
+
+				contentPane.remove(college_comboBox);
+		        contentPane.remove(orgtxtfld);
+				
+		        if (selectedAffiliationObj != null) {
+		        	
+		        	String affiliation = selectedAffiliationObj.toString();
+		        	
+					if("Research Thrust".equals(affiliation))
+					{
+						contentPane.add(college_comboBox);
+						try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/rdc-rms", "root", "")) {
+				            // Query the database to fetch discipline data
+				            String query = "SELECT abbreviation FROM research_thrust";
+				            PreparedStatement statement = connection.prepareStatement(query);
+				            ResultSet resultSet = statement.executeQuery();
+	
+				            // Populate the dropdown with the retrieved data
+				            while (resultSet.next()) {
+				                String disciplineName = resultSet.getString("abbreviation");
+				                college_comboBox.removeAllItems();
+				                college_comboBox.addItem(disciplineName);
+				                
+				            }
+				        } catch (SQLException e1) {
+				            e1.printStackTrace();
+				        }
+						lblNewLabel_2.setText("NAME");
+						department_comboBox.setEnabled(false);
+						department_comboBox.setForeground(Color.LIGHT_GRAY);
+						
+						
+					}
+					else if("Organization".equals(affiliation))
+					{
+						 contentPane.add(orgtxtfld);
+						 department_comboBox.setEnabled(false);
+					}
+					else if("Freelancer".equals(affiliation))
+					{
+						contentPane.add(orgtxtfld);
+						college_comboBox.setEnabled(false);
+						orgtxtfld.setEnabled(false);
+						department_comboBox.setEnabled(false);
+						department_comboBox.setForeground(Color.LIGHT_GRAY);
+					}
+					else
+					{
+						contentPane.add(college_comboBox);
+						try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/rdc-rms", "root", "")) {
+				            // Query the database to fetch discipline data
+				            String query = "SELECT abbreviation FROM college";
+				            PreparedStatement statement = connection.prepareStatement(query);
+				            ResultSet resultSet = statement.executeQuery();
+	
+				            // Populate the dropdown with the retrieved data
+				            while (resultSet.next()) {
+				                String disciplineName = resultSet.getString("abbreviation");
+				                college_comboBox.addItem(disciplineName);
+				            }
+				        } catch (SQLException e1) {
+				            e1.printStackTrace();
+				        }
+						lblNewLabel_2.setText("COLLEGE");
+						department_comboBox.setEnabled(true);
+						department_comboBox.setForeground(Color.BLACK);
+						college_comboBox.setEnabled(true);
+					}
+		        }
+		        else
+		        {
+		        	JOptionPane.showMessageDialog(contentPane, "Please select an affiliation.", "Error", JOptionPane.ERROR_MESSAGE);
+
+		        }
+				
+				contentPane.revalidate();
+                contentPane.repaint();
 			}
 		});
-		comboBox.setBounds(196, 352, 252, 21);
-		contentPane.add(comboBox);
 		
-		comboBox.addItem("University");
-		comboBox.addItem("Research Trust");
-		comboBox.addItem("Organization");
-		comboBox.addItem("Freelancer");
+		affiliation_comboBox.addItem("University");
+		affiliation_comboBox.addItem("Research Thrust");
+		affiliation_comboBox.addItem("Organization");
+		affiliation_comboBox.addItem("Freelancer");
 		
-		
-		comboBox_1.setBounds(196, 394, 252, 21);
-		contentPane.add(comboBox_1);
-		
-		
-		
-		JComboBox comboBox_2 = new JComboBox();
-		comboBox_2.setBounds(196, 440, 252, 21);
-		contentPane.add(comboBox_2);
-		
-		comboBox_2.addItem("Social Sciences");
-		
+		affiliation_comboBox.setBounds(196, 352, 252, 21);
+		contentPane.add(affiliation_comboBox);
+	
 		JButton btnNewButton = new JButton("CANCEL");
 		btnNewButton.setBackground(new Color(255, 0, 0));
 		btnNewButton.addActionListener(new ActionListener() {
@@ -173,6 +261,7 @@ public class addnewfaculty extends JFrame {
 		
 		dbConnection = new connection();
 		
+		
 		JButton btnAdd = new JButton("ADD");
 		btnAdd.setBackground(SystemColor.textHighlight);
 		btnAdd.addActionListener(new ActionListener() {
@@ -181,17 +270,41 @@ public class addnewfaculty extends JFrame {
 				 try {
 					 
 					 	String facultyID = generateUniqueFacultyID();
-	                    String name = textField_1.getText();
-	                    String affiliation = comboBox.getSelectedItem().toString();
-	                    String college = comboBox_1.getSelectedItem().toString();
-	                    String department = comboBox_2.getSelectedItem().toString();
-	                    
-	                    if (name.equals(""))
-	                    {
-	                    	JOptionPane.showMessageDialog(contentPane, "Insert Author Name", "Error", JOptionPane.ERROR_MESSAGE);
-	                    }
-	                   
+	                    String name = nametxtfld.getText();
+	                    String affiliation = affiliation_comboBox.getSelectedItem().toString();                    
+	                    String college;
+	                    String department;
 
+	                    // Handle different affiliations
+	                    if ("Organization".equals(affiliation)) {
+	                        college = orgtxtfld.getText();
+	                        department = "N/A"; // or set it to an empty string, depending on your database schema
+	                    } 
+	                    else if ("Research Thrust".equals(affiliation))
+	                    {
+	                    	 college = college_comboBox.getSelectedItem().toString();
+		                     department = "N/A"; 
+	                    }
+	                    else if ("Freelancer".equals(   affiliation))
+	                    {
+	                    	college = "N/A";
+	                    	department = "N/A";
+	                    }
+	                    
+	                    else {
+	                        college = college_comboBox.getSelectedItem().toString();
+	                        department = department_comboBox.getSelectedItem().toString();
+	                    }
+	                    
+	                    
+
+	                    // Check if the name is empty or null
+	                    if (name == null || name.trim().isEmpty()) {
+	                        JOptionPane.showMessageDialog(contentPane, "Insert Author Name", "Error", JOptionPane.ERROR_MESSAGE);
+	                        return;
+	                    }
+	                    
+	                    
 	                    // Check if the name already exists
 	                    if (isNameExists(name)) {
 	                        // Display an error message or handle the name existence case
