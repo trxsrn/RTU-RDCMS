@@ -26,6 +26,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextArea;
 import javax.swing.JCheckBox;
@@ -42,6 +45,9 @@ public class researchDetails extends JFrame {
     private JTable authorstbl;
     private DefaultTableModel authorstableModel;
     private JButton selectedButton = null;
+    private JDateChooser dateChooser_1;
+    private JDateChooser dateChooser_2;
+    private JDateChooser dateChooser_3;
     private final ButtonGroup buttonGroup = new ButtonGroup();
 
     public static void main(String[] args) {
@@ -268,7 +274,7 @@ public class researchDetails extends JFrame {
         lblNewLabel_1_3_1_1_1_2.setBounds(36, 589, 301, 19);
         contentPane.add(lblNewLabel_1_3_1_1_1_2);
         
-        JLabel lblNewLabel_1_3_1_1_1_1_1 = new JLabel("Accomplished date:");
+        JLabel lblNewLabel_1_3_1_1_1_1_1 = new JLabel("Published date:");
         lblNewLabel_1_3_1_1_1_1_1.setForeground(SystemColor.text);
         lblNewLabel_1_3_1_1_1_1_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
         lblNewLabel_1_3_1_1_1_1_1.setBounds(36, 630, 301, 19);
@@ -311,12 +317,12 @@ public class researchDetails extends JFrame {
                 edit_btn.setBounds(163, 76, 45, 19);
                 contentPane.add(edit_btn);
                 
-                JLabel lblNewLabel_2 = new JLabel("New label");
-                lblNewLabel_2.setForeground(Color.RED);
-                lblNewLabel_2.setBounds(333, 81, 397, 13);
+                JLabel lblNewLabel_2 = new JLabel("VIEW RESEARH HISTORY");
+                lblNewLabel_2.setForeground(SystemColor.text);
+                lblNewLabel_2.setBounds(570, 81, 160, 13);
                 contentPane.add(lblNewLabel_2);
                 
-                JLabel lblNewLabel_1_3_1 = new JLabel("NOTES:");
+                JLabel lblNewLabel_1_3_1 = new JLabel("REMARKS:");
                 lblNewLabel_1_3_1.setForeground(SystemColor.text);
                 lblNewLabel_1_3_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
                 lblNewLabel_1_3_1.setBounds(36, 673, 167, 19);
@@ -379,12 +385,38 @@ public class researchDetails extends JFrame {
         }
     }
 
-	private void selectButton() {
-        if (selectedButton != null) {
-            selectedButton.setEnabled(true);
-            
-        }
-        
-   // You can set it to savebtn or editbtn as needed.
-    }
+	private void loadDates(String paperid) throws ParseException {
+	    try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/rdc-rms", "root", "")) {
+	        // Prepare an SQL query to retrieve research data based on paper ID
+	        String sql = "SELECT colloquium, forum, published FROM research_summary WHERE paper_id = ?";
+	        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+	        preparedStatement.setString(1, paperid);
+
+	        // Execute the query and retrieve the result set
+	        ResultSet resultSet = preparedStatement.executeQuery();
+
+	        // Populate the date choosers with data from the result set
+	        while (resultSet.next()) {
+	            String colloquiumDate = resultSet.getString("colloquium");
+	            String forumDate = resultSet.getString("forum");
+	            String publishedDate = resultSet.getString("published");
+
+	            // Assuming dateChooser_1, dateChooser_2, dateChooser_3 are your JDateChooser components
+	            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); // Modify the date format based on your database schema
+	            Date colloquium = dateFormat.parse(colloquiumDate);
+	            Date forum = dateFormat.parse(forumDate);
+	            Date published = dateFormat.parse(publishedDate);
+
+	            // Use the class-level variables directly to set the dates
+	            dateChooser_1.setDate(colloquium);
+	            dateChooser_2.setDate(forum);
+	            dateChooser_3.setDate(published);
+	        }
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
+
+
 }

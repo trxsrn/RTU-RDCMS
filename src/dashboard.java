@@ -84,7 +84,12 @@ public class dashboard extends JFrame {
         setContentPane(contentPane);
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.X_AXIS));
         
-
+//	    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+//	    int centerX = (screenSize.width - getWidth()) / 2;
+//	    int centerY = (screenSize.height - getHeight()) / 2;
+//	    setLocation(centerX, centerY);
+//	    getContentPane().setLayout(null);
+//	    
         // Create a panel for the menu (25%)
         JPanel menuPanel = new JPanel();
         menuPanel.setBackground(SystemColor.textHighlight);
@@ -95,7 +100,7 @@ public class dashboard extends JFrame {
         JLabel lblNewLabel = new JLabel("");
         lblNewLabel.setBounds(0, 31, 232, 167);
         lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        lblNewLabel.setIcon(new ImageIcon("C:\\xampp\\htdocs\\TRR\\css\\img\\RDC logo 2.png"));
+        lblNewLabel.setIcon(new ImageIcon("C:\\Users\\TRIXIE\\Documents\\FOURTH YEAR\\System Integration\\New folder\\TRR\\css\\img\\RDC logo 2.png"));
         menuPanel.add(lblNewLabel);
         
         JPanel panel = new JPanel();
@@ -152,7 +157,7 @@ public class dashboard extends JFrame {
         
         JPanel panel_4 = new JPanel();
         panel_4.setBackground(SystemColor.textHighlight);
-        panel_4.setBounds(795, 489, 347, 29);
+        panel_4.setBounds(795, 237, 347, 29);
         panel_2.add(panel_4);
         panel_4.setLayout(null);
         
@@ -164,7 +169,7 @@ public class dashboard extends JFrame {
         panel_4.add(label_1);
         
         table_1 = new JTable();
-        table_1.setBounds(795, 517, 347, 167);
+        table_1.setBounds(795, 266, 347, 418);
         panel_2.add(table_1);
         
         JButton btnNewButton_2 = new JButton("ADD TASK");
@@ -174,13 +179,107 @@ public class dashboard extends JFrame {
         panel_2.add(btnNewButton_2);
         
         table = new JTable();
-        table.setBounds(795, 312, 347, 167);
+        table.setBounds(795, 60, 347, 167);
         panel_2.add(table);
         
         JLabel lblNewLabel_1 = new JLabel("Events");
         lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
-        lblNewLabel_1.setBounds(795, 315, 117, 29);
+        lblNewLabel_1.setBounds(795, 21, 117, 29);
         panel_2.add(lblNewLabel_1);
+        
+        JLabel lblNewLabel_4 = new JLabel("FACULTY");
+        lblNewLabel_4.setBounds(47, 424, 77, 13);
+        panel_2.add(lblNewLabel_4);
+        
+        JLabel lblNewLabel_4_1 = new JLabel("RESEARCH");
+        lblNewLabel_4_1.setBounds(477, 424, 77, 13);
+        panel_2.add(lblNewLabel_4_1);
+        
+        JLabel lblNewLabel_5 = new JLabel("COLLOUIUM");
+        lblNewLabel_5.setBounds(470, 590, 117, 13);
+        panel_2.add(lblNewLabel_5);
+        
+        JLabel lblNewLabel_5_1 = new JLabel("FORUM");
+        lblNewLabel_5_1.setBounds(470, 622, 117, 13);
+        panel_2.add(lblNewLabel_5_1);
+        
+        JLabel lblNewLabel_5_1_1 = new JLabel("PUBLISH");
+        lblNewLabel_5_1_1.setBounds(470, 645, 117, 13);
+        panel_2.add(lblNewLabel_5_1_1);
+        
+        JLabel lblNewLabel_5_1_1_1 = new JLabel("CONFERENCE");
+        lblNewLabel_5_1_1_1.setBounds(470, 675, 117, 13);
+        panel_2.add(lblNewLabel_5_1_1_1);
+        
+        JLabel lblNewLabel_5_2 = new JLabel("99");
+        lblNewLabel_5_2.setBounds(687, 590, 57, 13);
+        panel_2.add(lblNewLabel_5_2);
+        
+        JLabel lblNewLabel_5_1_2 = new JLabel("99");
+        lblNewLabel_5_1_2.setBounds(687, 622, 57, 13);
+        panel_2.add(lblNewLabel_5_1_2);
+        
+        JLabel lblNewLabel_5_1_1_2 = new JLabel("99");
+        lblNewLabel_5_1_1_2.setBounds(687, 645, 57, 13);
+        panel_2.add(lblNewLabel_5_1_1_2);
+        
+        JLabel lblNewLabel_5_1_1_1_1 = new JLabel("99");
+        lblNewLabel_5_1_1_1_1.setBounds(687, 675, 57, 13);
+        panel_2.add(lblNewLabel_5_1_1_1_1);
+        
+        JPanel panel_5 = new JPanel();
+        panel_5.setBackground(SystemColor.activeCaption);
+        panel_5.setBounds(470, 464, 276, 94);
+        panel_2.add(panel_5);
+        panel_5.setLayout(null);
+        
+        JLabel lblNewLabel_5_2_1 = new JLabel("396");
+        lblNewLabel_5_2_1.setBounds(105, 23, 117, 49);
+        panel_5.add(lblNewLabel_5_2_1);
+        lblNewLabel_5_2_1.setFont(new Font("Tahoma", Font.PLAIN, 40));
+        
+        JPanel panel_5_1 = new JPanel();
+        panel_5_1.setLayout(null);
+        panel_5_1.setBackground(SystemColor.activeCaption);
+        panel_5_1.setBounds(47, 464, 276, 94);
+        panel_2.add(panel_5_1);
+        
+        JLabel lblNewLabel_5_2_1_2 = new JLabel("352");
+        lblNewLabel_5_2_1_2.setFont(new Font("Tahoma", Font.PLAIN, 40));
+        lblNewLabel_5_2_1_2.setBounds(105, 23, 117, 49);
+        panel_5_1.add(lblNewLabel_5_2_1_2);
+        
+        JLabel lblNewLabel_5_3 = new JLabel("CEA");
+        lblNewLabel_5_3.setBounds(47, 590, 117, 13);
+        panel_2.add(lblNewLabel_5_3);
+        
+        JLabel lblNewLabel_5_1_3 = new JLabel("CBEA");
+        lblNewLabel_5_1_3.setBounds(47, 622, 117, 13);
+        panel_2.add(lblNewLabel_5_1_3);
+        
+        JLabel lblNewLabel_5_1_1_3 = new JLabel("CAS");
+        lblNewLabel_5_1_1_3.setBounds(47, 645, 117, 13);
+        panel_2.add(lblNewLabel_5_1_1_3);
+        
+        JLabel lblNewLabel_5_1_1_1_2 = new JLabel("CONFERENCE");
+        lblNewLabel_5_1_1_1_2.setBounds(47, 671, 117, 13);
+        panel_2.add(lblNewLabel_5_1_1_1_2);
+        
+        JLabel lblNewLabel_5_2_2 = new JLabel("99");
+        lblNewLabel_5_2_2.setBounds(266, 586, 57, 13);
+        panel_2.add(lblNewLabel_5_2_2);
+        
+        JLabel lblNewLabel_5_1_2_1 = new JLabel("99");
+        lblNewLabel_5_1_2_1.setBounds(266, 618, 57, 13);
+        panel_2.add(lblNewLabel_5_1_2_1);
+        
+        JLabel lblNewLabel_5_1_1_2_1 = new JLabel("99");
+        lblNewLabel_5_1_1_2_1.setBounds(266, 641, 57, 13);
+        panel_2.add(lblNewLabel_5_1_1_2_1);
+        
+        JLabel lblNewLabel_5_1_1_1_1_1 = new JLabel("99");
+        lblNewLabel_5_1_1_1_1_1.setBounds(266, 671, 57, 13);
+        panel_2.add(lblNewLabel_5_1_1_1_1_1);
         
         JPanel faculty = new JPanel();
         faculty.setBackground(Color.WHITE);
@@ -379,6 +478,8 @@ public class dashboard extends JFrame {
         faculty.add(btnNewButton_1_1);
         
         JButton btnNewButton_4 = new JButton("GENERATE A PDF");
+        btnNewButton_4.setForeground(SystemColor.text);
+        btnNewButton_4.setBackground(SystemColor.textHighlight);
         btnNewButton_4.setFont(new Font("Tahoma", Font.PLAIN, 15));
         btnNewButton_4.setBounds(10, 745, 1124, 41);
         faculty.add(btnNewButton_4);
@@ -650,6 +751,8 @@ public class dashboard extends JFrame {
         panel_1_1_1.add(btnNewButton_5);
         
         JButton btnNewButton_4_1 = new JButton("GENERATE A PDF");
+        btnNewButton_4_1.setForeground(SystemColor.text);
+        btnNewButton_4_1.setBackground(SystemColor.textHighlight);
         btnNewButton_4_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
         btnNewButton_4_1.setBounds(10, 745, 1124, 41);
         research.add(btnNewButton_4_1);
@@ -686,7 +789,9 @@ public class dashboard extends JFrame {
         label.setBounds(39, 40, 184, 21);
         panel_3.add(label);
         
-        Button button = new Button("New button");
+        Button button = new Button("ADD");
+        button.setForeground(SystemColor.text);
+        button.setBackground(SystemColor.textHighlight);
         button.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		
@@ -732,7 +837,9 @@ public class dashboard extends JFrame {
         label_2.setBounds(39, 244, 184, 21);
         panel_3.add(label_2);
         
-        Button button_1 = new Button("New button");
+        Button button_1 = new Button("ADD");
+        button_1.setForeground(SystemColor.text);
+        button_1.setBackground(SystemColor.textHighlight);
         button_1.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		
@@ -778,7 +885,9 @@ public class dashboard extends JFrame {
         label_2_1.setBounds(39, 459, 184, 21);
         panel_3.add(label_2_1);
         
-        Button button_1_1 = new Button("New button");
+        Button button_1_1 = new Button("ADD");
+        button_1_1.setForeground(SystemColor.text);
+        button_1_1.setBackground(SystemColor.textHighlight);
         button_1_1.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		
@@ -838,18 +947,12 @@ public class dashboard extends JFrame {
         panel_1_3.setBounds(0, 0, 1152, 73);
         settings.add(panel_1_3);
         
-        JLabel lblNewLabel_3_3 = new JLabel("DASHBOARD");
+        JLabel lblNewLabel_3_3 = new JLabel("SETTINGS");
         lblNewLabel_3_3.setHorizontalAlignment(SwingConstants.LEFT);
         lblNewLabel_3_3.setForeground(SystemColor.text);
         lblNewLabel_3_3.setFont(new Font("Tahoma", Font.PLAIN, 20));
         lblNewLabel_3_3.setBounds(25, 20, 160, 32);
         panel_1_3.add(lblNewLabel_3_3);
-        
-        JLabel lblNewLabel_4_2 = new JLabel("New label");
-        lblNewLabel_4_2.setForeground(SystemColor.text);
-        lblNewLabel_4_2.setFont(new Font("Tahoma", Font.PLAIN, 20));
-        lblNewLabel_4_2.setBounds(995, 32, 101, 13);
-        panel_1_3.add(lblNewLabel_4_2);
         
         JButton dashboardbtn = new JButton("DASHBOARD");
         dashboardbtn.setBorderPainted(false);
@@ -884,7 +987,7 @@ public class dashboard extends JFrame {
         	        content.revalidate();
         	        content.repaint();
         	        loadResearchData();
-        		
+ 
         	}
         });
         panel.add(researchbtn);

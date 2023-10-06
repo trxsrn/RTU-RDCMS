@@ -12,10 +12,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -32,18 +32,17 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.SwingUtilities;
 import javax.swing.JComboBox;
 import javax.swing.JSpinner;
-import com.toedter.calendar.JDayChooser;
-import com.toedter.calendar.JMonthChooser;
+
 import com.toedter.calendar.JYearChooser;
-import com.toedter.components.JSpinField;
 import java.awt.Color;
 import java.awt.SystemColor;
 import javax.swing.JTextArea;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class addnewresearch extends JFrame {
 
-	private connection dbConnection;
-    private JPanel contentPane;
+	private JPanel contentPane;
     private JTextArea textField_1;
     private JTextField author_txtfld;
     private JTable table;
@@ -53,11 +52,11 @@ public class addnewresearch extends JFrame {
     private ArrayList<String> authorlist = new ArrayList<>();
     private ArrayList<String> authorname = new ArrayList<>();
     private JComboBox<String> discipline; 
+    private JComboBox<String> month; 
     private String selectedDiscipline;
     private int selectedYear;
-    private String selectedMonthCode;
     private JSpinner number;
-    
+    private JYearChooser year;
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
             try {
@@ -111,6 +110,11 @@ public class addnewresearch extends JFrame {
 
         table = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.addMouseListener(new MouseAdapter() {
+        	@Override
+        	public void mouseClicked(MouseEvent e) {
+        	}
+        });
         scrollPane.setBounds(48, 313, 750, 230);
         contentPane.add(scrollPane);
 
@@ -161,6 +165,8 @@ public class addnewresearch extends JFrame {
                         tableModel.addRow(new Object[]{authorId, author, college, department});
 
                         author_txtfld.setText("");
+                        
+                        
 
                  
                     } else {
@@ -206,8 +212,7 @@ public class addnewresearch extends JFrame {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        
-        Map<String, String> monthCodeMap = new HashMap<>();
+        Map<String, String> monthCodeMap = new LinkedHashMap<>();
         monthCodeMap.put("January", "1");
         monthCodeMap.put("February", "2");
         monthCodeMap.put("March", "3");
@@ -221,52 +226,33 @@ public class addnewresearch extends JFrame {
         monthCodeMap.put("November", "11");
         monthCodeMap.put("December", "12");
         
-        JYearChooser year = new JYearChooser();
+        year = new JYearChooser();
+        year.getSpinner().addMouseListener(new MouseAdapter() {
+        	@Override
+        	public void mouseClicked(MouseEvent e) {
+        		generatePaperID();
+        	}
+        });
         year.setBounds(554, 144, 112, 33);
         contentPane.add(year);
+        
         
         number = new JSpinner();
         number.setBounds(676, 144, 122, 33);
         contentPane.add(number);
         
-        SpinnerNumberModel spinnerModel = new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1);
-        number.setModel(spinnerModel);
+//        SpinnerNumberModel numberModel = new SpinnerNumberModel(initialValue, minValue, maxValue, stepSize);
+        SpinnerNumberModel numberModel = (SpinnerNumberModel) number.getModel(); // Replace min, max, and step size with appropriate values
+        int newMaxValue = 100; // set your new maximum value here
+        numberModel.setMaximum(newMaxValue);
+        number.setModel(numberModel);
 
-        JComboBox month = new JComboBox();
+
+        month = new JComboBox();
         month.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		
-        		 selectedDiscipline = discipline.getSelectedItem().toString();
-
-                 // Get the current month and year from the UI components
-                 int selectedMonth = month.getSelectedIndex() + 1; // Month is 0-based index
-                 selectedYear = year.getYear();
-
-                 // Query the database to fetch the last count for the selected discipline, month, and year
-                 try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/rdc-rms", "root", "")) {
-                 	String query = "SELECT MAX(CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(paper_id, ' - ', -2), ' - ', -1) AS UNSIGNED)) " +
-                             "FROM research_summary WHERE SUBSTRING_INDEX(paper_id, ' - ', 1) = ? " +
-                             "AND SUBSTRING_INDEX(SUBSTRING_INDEX(paper_id, ' - ', -3), ' - ', -1) = ? " +
-                             "AND SUBSTRING_INDEX(SUBSTRING_INDEX(paper_id, ' - ', -2), ' - ', -3) = ?";
-                     PreparedStatement statement = connection.prepareStatement(query);
-                     statement.setString(1, selectedDiscipline);
-                     statement.setInt(2, selectedMonth);
-                     statement.setInt(3, selectedYear);
-
-                     ResultSet resultSet = statement.executeQuery();
-
-                     if (resultSet.next()) {
-                         // Get the last count from the database, increment it by 1 for the new entry, and set JSpinner value
-                         int lastCount = resultSet.getInt(1);
-                         int newCount = lastCount + 1;
-                         number.setValue(newCount);
-                     } else {
-                         // If no entry exists for the selected discipline, month, and year, set JSpinner value to 1
-                         number.setValue(1);
-                     }
-                 } catch (SQLException ex) {
-                     ex.printStackTrace();
-                 }
+        		generatePaperID();
         	}
         });
         month.setBounds(375, 144, 169, 33);
@@ -278,54 +264,15 @@ public class addnewresearch extends JFrame {
         }
         
         
-     // Inside your discipline ActionListener
         discipline.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                selectedDiscipline = discipline.getSelectedItem().toString();
-                int selectedMonth = month.getSelectedIndex() + 1;
-                selectedYear = year.getYear();
-
-                try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/rdc-rms", "root", "")) {
-                    String query = "SELECT MAX(CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(paper_id, ' - ', -1), ' - ', -1) AS UNSIGNED)), " +
-                                   "SUBSTRING_INDEX(paper_id, ' - ', 1), " +
-                                   "SUBSTRING_INDEX(SUBSTRING_INDEX(paper_id, ' - ', -2), ' - ', -1), " +
-                                   "SUBSTRING_INDEX(paper_id, ' - ', -2) " +
-                                   "FROM research_summary WHERE SUBSTRING_INDEX(paper_id, ' - ', 1) = ? " +
-                                   "GROUP BY SUBSTRING_INDEX(paper_id, ' - ', 1), " +
-                                   "SUBSTRING_INDEX(SUBSTRING_INDEX(paper_id, ' - ', -2), ' - ', -1), " +
-                                   "SUBSTRING_INDEX(paper_id, ' - ', -2)";
-                    PreparedStatement statement = connection.prepareStatement(query);
-                    statement.setString(1, selectedDiscipline);
-
-                    ResultSet resultSet = statement.executeQuery();
-
-                    boolean found = false;
-
-                    while (resultSet.next()) {
-                        int lastCount = resultSet.getInt(1);
-                        String retrievedDiscipline = resultSet.getString(2);
-                        int retrievedMonth = resultSet.getInt(3);
-                        int retrievedYear = resultSet.getInt(4);
-
-                        if (retrievedDiscipline.equals(selectedDiscipline) &&
-                            retrievedMonth == selectedMonth &&
-                            retrievedYear == selectedYear) {
-                            int newCount = lastCount + 1;
-                            number.setValue(newCount);
-                            found = true;
-                            break;
-                        }
-                    }
-
-                    if (!found) {
-                        number.setValue(1);
-                    }
-
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
-                }
+        
+            	generatePaperID();
             }
         });
+        
+
+        	
 
         JButton btnNewButton = new JButton("SUBMIT");
         btnNewButton.addActionListener(new ActionListener() {
@@ -348,7 +295,7 @@ public class addnewresearch extends JFrame {
 
             		for (int i = 0; i < tableModel.getRowCount(); i++) {
             		    String authorId = tableModel.getValueAt(i, 0).toString();
-            		    String authorname = tableModel.getValueAt(i, 1).toString();
+            		    tableModel.getValueAt(i, 1).toString();
             		    String college = tableModel.getValueAt(i, 2).toString();
             		    String department = tableModel.getValueAt(i, 3).toString();
 
@@ -359,8 +306,7 @@ public class addnewresearch extends JFrame {
             		    facultyStatement.setString(5, department);
             		    facultyStatement.setString(6, status);
 
-            		    // Execute the insert statement for each author
-            		    int rowsInsertedFaculty = facultyStatement.executeUpdate();
+            		    facultyStatement.executeUpdate();
 
             		}
 
@@ -389,8 +335,6 @@ public class addnewresearch extends JFrame {
             		int rowsInsertedSummary = summaryStatement.executeUpdate();
 
             		if (rowsInsertedSummary > 0) {
-            			System.out.println("Final ID: " + final_id); // Print the final_id
-            			System.out.println("SQL Query: " + summaryStatement);   // Print the SQL query
             			 JOptionPane.showMessageDialog(null, "Addition was successful!", "SUCCESS", JOptionPane.INFORMATION_MESSAGE);
             			 parentDashboard.refreshResearchTable(); //
  	                    dispose();
@@ -485,4 +429,41 @@ public class addnewresearch extends JFrame {
         }
         return departments;
     }
+    
+    private void generatePaperID() {
+        selectedDiscipline = discipline.getSelectedItem().toString();
+        int selectedMonth = month.getSelectedIndex() + 1;
+        selectedYear = year.getYear();
+
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/rdc-rms", "root", "")) {
+            String query = "SELECT MAX(CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(TRIM(paper_id), ' - ', -1), ' -', 1) AS UNSIGNED)) " +
+                           "FROM research_summary WHERE SUBSTRING_INDEX(TRIM(paper_id), ' - ', 1) = ? " +
+                           "AND SUBSTRING_INDEX(SUBSTRING_INDEX(TRIM(paper_id), ' - ', 2), ' - ', -1) = ? " +
+                           "AND SUBSTRING_INDEX(SUBSTRING_INDEX(TRIM(paper_id), ' - ', 3), ' - ', -1) = ?";
+            
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, selectedDiscipline);
+            statement.setInt(2, selectedMonth);
+            statement.setInt(3, selectedYear);
+
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                int previousCount = resultSet.getInt(1);
+                SwingUtilities.invokeLater(() -> {
+                    number.setValue(previousCount + 1);
+                    System.out.println("Previous Count: " + previousCount);
+                });
+            } else {
+                SwingUtilities.invokeLater(() -> {
+                    number.setValue(1);
+                    System.out.println("No previous records found, setting default count to 1.");
+                });
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+    }
+
 }
