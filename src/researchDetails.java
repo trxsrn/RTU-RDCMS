@@ -66,7 +66,7 @@ public class researchDetails extends JFrame {
     public researchDetails(String paperid, String papertitle) { 
     	setTitle("RESEARCH DETAILS");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setBounds(50, 50, 782, 903);
+        setBounds(50, 50, 891, 754);
         contentPane = new JPanel();
         contentPane.setBackground(SystemColor.textHighlight);
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -100,7 +100,7 @@ public class researchDetails extends JFrame {
         contentPane.setLayout(null);
 
         JScrollPane scrollPane = new JScrollPane();
-        scrollPane.setBounds(36, 243, 694, 162);
+        scrollPane.setBounds(36, 200, 806, 162);
         scrollPane.setPreferredSize(new Dimension(1078, 281));
         contentPane.add(scrollPane);
 
@@ -187,25 +187,25 @@ public class researchDetails extends JFrame {
         lblNewLabel_1_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
         contentPane.add(lblNewLabel_1_1);
 
-        JTextField facultyName = new JTextField(papertitle);
-        facultyName.setEnabled(false);
-        facultyName.setEditable(false);
-        facultyName.setHorizontalAlignment(SwingConstants.CENTER);
-        facultyName.setFont(new Font("Tahoma", Font.PLAIN, 15));
-        facultyName.setForeground(Color.BLACK);
-        facultyName.setBounds(36, 105, 694, 70);
-        contentPane.add(facultyName);
+        JTextField researchtitle = new JTextField(papertitle);
+        researchtitle.setEnabled(false);
+        researchtitle.setEditable(false);
+        researchtitle.setHorizontalAlignment(SwingConstants.CENTER);
+        researchtitle.setFont(new Font("Tahoma", Font.PLAIN, 15));
+        researchtitle.setForeground(Color.BLACK);
+        researchtitle.setBounds(36, 105, 806, 55);
+        contentPane.add(researchtitle);
 
         JLabel lblNewLabel_1_3 = new JLabel("PROPONENTS:");
         lblNewLabel_1_3.setForeground(SystemColor.text);
-        lblNewLabel_1_3.setBounds(36, 200, 167, 19);
+        lblNewLabel_1_3.setBounds(36, 171, 167, 19);
         lblNewLabel_1_3.setFont(new Font("Tahoma", Font.PLAIN, 15));
         contentPane.add(lblNewLabel_1_3);
         
         JLabel lblNewLabel_1_3_1_1 = new JLabel("Is it subject for forum?");
         lblNewLabel_1_3_1_1.setForeground(SystemColor.text);
         lblNewLabel_1_3_1_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
-        lblNewLabel_1_3_1_1.setBounds(36, 426, 190, 19);
+        lblNewLabel_1_3_1_1.setBounds(36, 387, 190, 19);
         contentPane.add(lblNewLabel_1_3_1_1);
         
         JRadioButton chckbxNewCheckBox = new JRadioButton("Yes");
@@ -213,80 +213,41 @@ public class researchDetails extends JFrame {
         chckbxNewCheckBox.setFont(new Font("Tahoma", Font.PLAIN, 15));
         chckbxNewCheckBox.setForeground(SystemColor.text);
         chckbxNewCheckBox.setBackground(SystemColor.textHighlight);
-        chckbxNewCheckBox.setBounds(533, 425, 93, 21);
+        chckbxNewCheckBox.setBounds(241, 386, 74, 21);
         contentPane.add(chckbxNewCheckBox);
         
         JLabel lblNewLabel_1_3_1_1_1 = new JLabel("If yes, select the date when will be held");
         lblNewLabel_1_3_1_1_1.setForeground(SystemColor.text);
         lblNewLabel_1_3_1_1_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
-        lblNewLabel_1_3_1_1_1.setBounds(36, 469, 301, 19);
+        lblNewLabel_1_3_1_1_1.setBounds(308, 424, 301, 19);
         contentPane.add(lblNewLabel_1_3_1_1_1);
         
-        JDateChooser dateChooser = new JDateChooser();
-        dateChooser.setBounds(364, 459, 366, 33);
-        contentPane.add(dateChooser);
-        
-        JRadioButton chckbxNotYet = new JRadioButton("Not Yet");
-        buttonGroup.add(chckbxNotYet);
-        chckbxNotYet.setForeground(SystemColor.text);
-        chckbxNotYet.setFont(new Font("Tahoma", Font.PLAIN, 15));
-        chckbxNotYet.setBackground(SystemColor.textHighlight);
-        chckbxNotYet.setBounds(637, 425, 93, 21);
-        contentPane.add(chckbxNotYet);
-        
-        JLabel lblNewLabel_1_3_1_1_1_1 = new JLabel("Accomplished date:");
-        lblNewLabel_1_3_1_1_1_1.setForeground(SystemColor.text);
-        lblNewLabel_1_3_1_1_1_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
-        lblNewLabel_1_3_1_1_1_1.setBounds(36, 510, 301, 19);
-        contentPane.add(lblNewLabel_1_3_1_1_1_1);
-        
-        JDateChooser dateChooser_1 = new JDateChooser();
-        dateChooser_1.setBounds(364, 502, 366, 33);
-        contentPane.add(dateChooser_1);
+        JDateChooser forumdate = new JDateChooser();
+        forumdate.setBounds(590, 379, 252, 27);
+        contentPane.add(forumdate);
         
         JLabel lblNewLabel_1_3_1_1_2 = new JLabel("Is it subject for colloquium?");
         lblNewLabel_1_3_1_1_2.setForeground(SystemColor.text);
         lblNewLabel_1_3_1_1_2.setFont(new Font("Tahoma", Font.PLAIN, 15));
-        lblNewLabel_1_3_1_1_2.setBounds(36, 546, 227, 19);
+        lblNewLabel_1_3_1_1_2.setBounds(36, 424, 227, 19);
         contentPane.add(lblNewLabel_1_3_1_1_2);
         
         JRadioButton chckbxNewCheckBox_1 = new JRadioButton("Yes");
         chckbxNewCheckBox_1.setForeground(SystemColor.text);
         chckbxNewCheckBox_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
         chckbxNewCheckBox_1.setBackground(SystemColor.textHighlight);
-        chckbxNewCheckBox_1.setBounds(533, 545, 93, 21);
+        chckbxNewCheckBox_1.setBounds(237, 423, 93, 21);
         contentPane.add(chckbxNewCheckBox_1);
-        
-        JRadioButton chckbxNotYet_1 = new JRadioButton("Not Yet");
-        chckbxNotYet_1.setForeground(SystemColor.text);
-        chckbxNotYet_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
-        chckbxNotYet_1.setBackground(SystemColor.textHighlight);
-        chckbxNotYet_1.setBounds(637, 545, 93, 21);
-        contentPane.add(chckbxNotYet_1);
-        
-        JDateChooser dateChooser_2 = new JDateChooser();
-        dateChooser_2.setBounds(364, 579, 366, 33);
-        contentPane.add(dateChooser_2);
         
         JLabel lblNewLabel_1_3_1_1_1_2 = new JLabel("If yes, select the date when will be held");
         lblNewLabel_1_3_1_1_1_2.setForeground(SystemColor.text);
         lblNewLabel_1_3_1_1_1_2.setFont(new Font("Tahoma", Font.PLAIN, 15));
-        lblNewLabel_1_3_1_1_1_2.setBounds(36, 589, 301, 19);
+        lblNewLabel_1_3_1_1_1_2.setBounds(308, 387, 301, 19);
         contentPane.add(lblNewLabel_1_3_1_1_1_2);
-        
-        JLabel lblNewLabel_1_3_1_1_1_1_1 = new JLabel("Published date:");
-        lblNewLabel_1_3_1_1_1_1_1.setForeground(SystemColor.text);
-        lblNewLabel_1_3_1_1_1_1_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
-        lblNewLabel_1_3_1_1_1_1_1.setBounds(36, 630, 301, 19);
-        contentPane.add(lblNewLabel_1_3_1_1_1_1_1);
-        
-        JDateChooser dateChooser_1_1 = new JDateChooser();
-        dateChooser_1_1.setBounds(364, 622, 366, 33);
-        contentPane.add(dateChooser_1_1);
         
         JPanel panel = new JPanel();
         panel.setBackground(Color.YELLOW);
-        panel.setBounds(0, 0, 768, 40);
+        panel.setBounds(0, 0, 877, 40);
         contentPane.add(panel);
         panel.setLayout(null);
         
@@ -300,7 +261,7 @@ public class researchDetails extends JFrame {
         
                 JLabel facultyID = new JLabel(paperid);
                 facultyID.setHorizontalAlignment(SwingConstants.RIGHT);
-                facultyID.setBounds(245, 10, 513, 19);
+                facultyID.setBounds(329, 10, 513, 19);
                 panel.add(facultyID);
                 facultyID.setEnabled(false);
                 facultyID.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -310,31 +271,76 @@ public class researchDetails extends JFrame {
                 edit_btn.setBackground(SystemColor.textHighlight);
                 edit_btn.addActionListener(new ActionListener() {
                 	public void actionPerformed(ActionEvent e) {
-                        facultyName.setEditable(true);
-                        facultyName.setEnabled(true);
+                        researchtitle.setEditable(true);
+                        researchtitle.setEnabled(true);
                 	}
                 });
-                edit_btn.setBounds(163, 76, 45, 19);
+                edit_btn.setBounds(797, 76, 45, 19);
                 contentPane.add(edit_btn);
-                
-                JLabel lblNewLabel_2 = new JLabel("VIEW RESEARH HISTORY");
-                lblNewLabel_2.setForeground(SystemColor.text);
-                lblNewLabel_2.setBounds(570, 81, 160, 13);
-                contentPane.add(lblNewLabel_2);
                 
                 JLabel lblNewLabel_1_3_1 = new JLabel("REMARKS:");
                 lblNewLabel_1_3_1.setForeground(SystemColor.text);
                 lblNewLabel_1_3_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
-                lblNewLabel_1_3_1.setBounds(36, 673, 167, 19);
+                lblNewLabel_1_3_1.setBounds(36, 490, 167, 19);
                 contentPane.add(lblNewLabel_1_3_1);
                 
                 JTextArea textArea = new JTextArea();
-                textArea.setBounds(36, 702, 694, 64);
+                textArea.setBounds(37, 523, 805, 112);
                 contentPane.add(textArea);
                 
-                JButton btnNewButton = new JButton("SAVE CHANGES");
-                btnNewButton.setBounds(278, 791, 182, 21);
-                contentPane.add(btnNewButton);
+     
+                JButton savebtn = new JButton("SAVE CHANGES");
+                savebtn.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        int response = JOptionPane.showConfirmDialog(
+                            null,
+                            "Are you sure you want to save changes?",
+                            "Save Changes",
+                            JOptionPane.YES_NO_OPTION
+                        );
+
+                        if (response == JOptionPane.YES_OPTION) {
+                            String title = researchtitle.getText(); // Get the text from researchtitle field
+
+                            try {
+                                // Establish a database connection (you need to fill in the connection details)
+                                Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/rdc-rms", "root", "");
+
+                                // Create a SQL query with sorting
+                                String query = "UPDATE research_summary "
+                                        + "JOIN research_faculty ON research_summary.paper_id = research_faculty.paper_id "
+                                        + "SET research_summary.title = ?, research_faculty.title = ? "
+                                        + "WHERE research_summary.paper_id = ?";
+
+                                // Create a PreparedStatement
+                                PreparedStatement preparedStatement = connection.prepareStatement(query);
+                                preparedStatement.setString(1, title);
+                                preparedStatement.setString(2, title);
+                                preparedStatement.setString(3, paperid); // Set your paper_id here
+
+                                // Execute the update operation
+                                int rowsAffected = preparedStatement.executeUpdate();
+
+                                if (rowsAffected > 0) {
+                                    JOptionPane.showMessageDialog(null, "Saved Changes!", "SUCCESS", JOptionPane.INFORMATION_MESSAGE);
+                                } else {
+                                    JOptionPane.showMessageDialog(null, "No changes were made.", "INFO", JOptionPane.INFORMATION_MESSAGE);
+                                }
+
+                                // Close resources (statement and connection)
+                                preparedStatement.close();
+                                connection.close();
+                            } catch (SQLException ex) {
+                                ex.printStackTrace();
+                                // Handle any exceptions that may occur while querying the database
+                            }
+                        }
+                    }
+                });
+
+                
+                savebtn.setBounds(682, 658, 160, 33);
+                contentPane.add(savebtn);
                 
                 JButton btnNewButton_1 = new JButton("ADD PROPONENT");
                 btnNewButton_1.addActionListener(new ActionListener() {
@@ -343,9 +349,44 @@ public class researchDetails extends JFrame {
                 		
                 	}
                 });
-                btnNewButton_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
-                btnNewButton_1.setBounds(533, 200, 189, 22);
+                btnNewButton_1.setFont(new Font("Tahoma", Font.PLAIN, 10));
+                btnNewButton_1.setBounds(711, 168, 131, 22);
                 contentPane.add(btnNewButton_1);
+                
+                JButton btnNewButton = new JButton("VIEW RESEARCH HISTORY");
+                btnNewButton.setBounds(206, 658, 466, 33);
+                contentPane.add(btnNewButton);
+                
+                JButton btnNewButton_2 = new JButton("DELETE RESEARCH");
+                btnNewButton_2.setBounds(36, 658, 160, 33);
+                contentPane.add(btnNewButton_2);
+                
+                JDateChooser forumdate_1 = new JDateChooser();
+                forumdate_1.setBounds(588, 416, 252, 27);
+                contentPane.add(forumdate_1);
+                
+                JLabel lblNewLabel_1_3_1_1_2_1 = new JLabel("Is it subject for conference?");
+                lblNewLabel_1_3_1_1_2_1.setForeground(SystemColor.text);
+                lblNewLabel_1_3_1_1_2_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
+                lblNewLabel_1_3_1_1_2_1.setBounds(36, 461, 227, 19);
+                contentPane.add(lblNewLabel_1_3_1_1_2_1);
+                
+                JRadioButton chckbxNewCheckBox_1_1 = new JRadioButton("Yes");
+                chckbxNewCheckBox_1_1.setForeground(SystemColor.text);
+                chckbxNewCheckBox_1_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
+                chckbxNewCheckBox_1_1.setBackground(SystemColor.textHighlight);
+                chckbxNewCheckBox_1_1.setBounds(236, 460, 66, 21);
+                contentPane.add(chckbxNewCheckBox_1_1);
+                
+                JLabel lblNewLabel_1_3_1_1_1_1 = new JLabel("If yes, select the date when will be held");
+                lblNewLabel_1_3_1_1_1_1.setForeground(SystemColor.text);
+                lblNewLabel_1_3_1_1_1_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
+                lblNewLabel_1_3_1_1_1_1.setBounds(308, 461, 301, 19);
+                contentPane.add(lblNewLabel_1_3_1_1_1_1);
+                
+                JDateChooser forumdate_1_1 = new JDateChooser();
+                forumdate_1_1.setBounds(590, 453, 252, 27);
+                contentPane.add(forumdate_1_1);
                 
          loadAuthors(paperid);
     }
@@ -417,6 +458,4 @@ public class researchDetails extends JFrame {
 	        e.printStackTrace();
 	    }
 	}
-
-
 }
