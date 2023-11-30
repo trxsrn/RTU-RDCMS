@@ -73,7 +73,7 @@ public class addnewresearch extends JFrame {
         initializeDatabaseConnection();
         populateNameList();
 
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setBounds(100, 100, 906, 699);
         contentPane = new JPanel();
         contentPane.setBackground(SystemColor.textHighlight);
@@ -285,7 +285,7 @@ public class addnewresearch extends JFrame {
             	String nextPaperIdCount = number.getValue().toString();
             	String final_id = selectedDiscipline + " - " + monthcode + " - " + selectedYear + " - " + nextPaperIdCount;
             	String title = textField_1.getText();
-            	String status = "Ongoing";
+            	String status = "Colloquium";
 
             	// Establish a database connection
             	try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/rdc-rms", "root", "")) {
@@ -310,26 +310,12 @@ public class addnewresearch extends JFrame {
 
             		}
 
-            		// Get the colleges and departments as lists
-            		List<String> colleges = getCollegesAsList();
-            		List<String> departments = getDepartmentsAsList();
-
-            		// Create a set to store unique colleges and departments for each paper
-            		Set<String> uniqueColleges = new HashSet<>(colleges);
-            		Set<String> uniqueDepartments = new HashSet<>(departments);
-
-            		// Create a comma-separated string for unique colleges and departments
-            		String uniqueCollegesStr = String.join(", ", uniqueColleges);
-            		String uniqueDepartmentsStr = String.join(", ", uniqueDepartments);
-
             		// Create the insert statement for research_summary
-            		String insertSummary = "INSERT INTO research_summary (paper_id, title, college, department, status) VALUES (?, ?, ?, ?, ?)";
+            		String insertSummary = "INSERT INTO research_summary (paper_id, title, status) VALUES (?, ?, ?)";
             		PreparedStatement summaryStatement = connection.prepareStatement(insertSummary);
             		summaryStatement.setString(1, final_id);
             		summaryStatement.setString(2, title);
-            		summaryStatement.setString(3, uniqueCollegesStr);
-            		summaryStatement.setString(4, uniqueDepartmentsStr);
-            		summaryStatement.setString(5, status);
+            		summaryStatement.setString(3, status);
 
             		// Execute the insert statement for research_summary
             		int rowsInsertedSummary = summaryStatement.executeUpdate();

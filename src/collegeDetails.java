@@ -39,7 +39,7 @@ public class collegeDetails extends JFrame {
 	 * Create the frame.
 	 */
 	public collegeDetails(String abb, String name, String desc) {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 599, 412);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));

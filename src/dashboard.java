@@ -52,13 +52,13 @@ public class dashboard extends JFrame {
     private JTextField faculty_search;
     private JTextField research_search;
     private JButton selectedButton = null;
-    private JTable table_1;
     private JLabel dateTimeLabel;
     private JTable table;
     private JTable thrusttbl;
     private JComboBox<String> discipline; 
     private JTable collegetbl;
     private JTable table_2;
+    private JTable table_4;
 
     
    
@@ -76,13 +76,17 @@ public class dashboard extends JFrame {
     }
 
     public dashboard() {
-    	setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\xampp\\htdocs\\TRR\\css\\img\\RDC logo 2.png"));
+    	setResizable(false);
+    	setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\TRIXIE\\Documents\\FOURTH YEAR\\System Integration\\New folder\\TRR\\css\\img\\RDC logo 2.png"));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(0, 0, 1406, 843);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.X_AXIS));
+        
+        int facultyCount = retrieveFacultyCountFromDatabase();
+        int ResearchCount = retrieveResearchCountFromDatabase();
         
 //	    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 //	    int centerX = (screenSize.width - getWidth()) / 2;
@@ -104,14 +108,15 @@ public class dashboard extends JFrame {
         menuPanel.add(lblNewLabel);
         
         JPanel panel = new JPanel();
+        panel.setBorder(null);
         panel.setBounds(0, 386, 232, 410);
         menuPanel.add(panel);
-        panel.setLayout(new GridLayout(6, 1, 0, 0));
+        panel.setLayout(new GridLayout(7, 1, 0, 0));
         
 
         // Create a panel for the content (75%)
         JPanel content = new JPanel();
-        content.setPreferredSize(new Dimension(1400 - (1400 / 6), 834));
+        content.setPreferredSize(new Dimension(1400 - (1400 / 7), 834));
         contentPane.add(content);
         content.setLayout(new CardLayout(0, 0));
         
@@ -155,131 +160,118 @@ public class dashboard extends JFrame {
         dashboard.add(panel_2);
         panel_2.setLayout(null);
         
-        JPanel panel_4 = new JPanel();
-        panel_4.setBackground(SystemColor.textHighlight);
-        panel_4.setBounds(795, 237, 347, 29);
-        panel_2.add(panel_4);
-        panel_4.setLayout(null);
-        
-        Label label_1 = new Label("MY TASK");
-        label_1.setAlignment(Label.CENTER);
-        label_1.setBounds(90, 0, 135, 29);
-        label_1.setForeground(Color.WHITE);
-        label_1.setFont(new Font("Dialog", Font.PLAIN, 10));
-        panel_4.add(label_1);
-        
-        table_1 = new JTable();
-        table_1.setBounds(795, 266, 347, 418);
-        panel_2.add(table_1);
-        
         JButton btnNewButton_2 = new JButton("ADD TASK");
-        btnNewButton_2.setForeground(Color.WHITE);
+        btnNewButton_2.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		
+        		newtask newtask = new newtask();
+    			newtask.setVisible(true);
+        	}
+        });
+        btnNewButton_2.setForeground(SystemColor.controlText);
         btnNewButton_2.setBackground(Color.YELLOW);
-        btnNewButton_2.setBounds(791, 684, 349, 29);
+        btnNewButton_2.setBounds(793, 684, 349, 29);
         panel_2.add(btnNewButton_2);
         
         table = new JTable();
-        table.setBounds(795, 60, 347, 167);
+        table.setBounds(47, 466, 697, 222);
         panel_2.add(table);
         
         JLabel lblNewLabel_1 = new JLabel("Events");
         lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
-        lblNewLabel_1.setBounds(795, 21, 117, 29);
+        lblNewLabel_1.setBounds(47, 424, 117, 29);
         panel_2.add(lblNewLabel_1);
         
         JLabel lblNewLabel_4 = new JLabel("FACULTY");
-        lblNewLabel_4.setBounds(47, 424, 77, 13);
+        lblNewLabel_4.setBounds(795, 37, 77, 13);
         panel_2.add(lblNewLabel_4);
         
         JLabel lblNewLabel_4_1 = new JLabel("RESEARCH");
-        lblNewLabel_4_1.setBounds(477, 424, 77, 13);
+        lblNewLabel_4_1.setBounds(795, 173, 77, 13);
         panel_2.add(lblNewLabel_4_1);
         
         JLabel lblNewLabel_5 = new JLabel("COLLOUIUM");
-        lblNewLabel_5.setBounds(470, 590, 117, 13);
+        lblNewLabel_5.setBounds(992, 210, 84, 13);
         panel_2.add(lblNewLabel_5);
         
         JLabel lblNewLabel_5_1 = new JLabel("FORUM");
-        lblNewLabel_5_1.setBounds(470, 622, 117, 13);
+        lblNewLabel_5_1.setBounds(992, 242, 84, 13);
         panel_2.add(lblNewLabel_5_1);
         
         JLabel lblNewLabel_5_1_1 = new JLabel("PUBLISH");
-        lblNewLabel_5_1_1.setBounds(470, 645, 117, 13);
+        lblNewLabel_5_1_1.setBounds(992, 265, 84, 13);
         panel_2.add(lblNewLabel_5_1_1);
         
         JLabel lblNewLabel_5_1_1_1 = new JLabel("CONFERENCE");
-        lblNewLabel_5_1_1_1.setBounds(470, 675, 117, 13);
+        lblNewLabel_5_1_1_1.setBounds(992, 295, 84, 13);
         panel_2.add(lblNewLabel_5_1_1_1);
         
         JLabel lblNewLabel_5_2 = new JLabel("99");
-        lblNewLabel_5_2.setBounds(687, 590, 57, 13);
+        lblNewLabel_5_2.setBounds(1086, 210, 57, 13);
         panel_2.add(lblNewLabel_5_2);
         
         JLabel lblNewLabel_5_1_2 = new JLabel("99");
-        lblNewLabel_5_1_2.setBounds(687, 622, 57, 13);
+        lblNewLabel_5_1_2.setBounds(1086, 242, 57, 13);
         panel_2.add(lblNewLabel_5_1_2);
         
         JLabel lblNewLabel_5_1_1_2 = new JLabel("99");
-        lblNewLabel_5_1_1_2.setBounds(687, 645, 57, 13);
+        lblNewLabel_5_1_1_2.setBounds(1086, 265, 57, 13);
         panel_2.add(lblNewLabel_5_1_1_2);
         
         JLabel lblNewLabel_5_1_1_1_1 = new JLabel("99");
-        lblNewLabel_5_1_1_1_1.setBounds(687, 675, 57, 13);
+        lblNewLabel_5_1_1_1_1.setBounds(1086, 295, 57, 13);
         panel_2.add(lblNewLabel_5_1_1_1_1);
         
         JPanel panel_5 = new JPanel();
         panel_5.setBackground(SystemColor.activeCaption);
-        panel_5.setBounds(470, 464, 276, 94);
+        panel_5.setBounds(791, 210, 192, 94);
         panel_2.add(panel_5);
         panel_5.setLayout(null);
         
-        JLabel lblNewLabel_5_2_1 = new JLabel("396");
-        lblNewLabel_5_2_1.setBounds(105, 23, 117, 49);
-        panel_5.add(lblNewLabel_5_2_1);
-        lblNewLabel_5_2_1.setFont(new Font("Tahoma", Font.PLAIN, 40));
+        JLabel noofresearch = new JLabel(String.valueOf(ResearchCount));
+        noofresearch.setHorizontalAlignment(SwingConstants.CENTER);
+        noofresearch.setBounds(31, 24, 117, 49);
+        panel_5.add(noofresearch);
+        noofresearch.setFont(new Font("Tahoma", Font.PLAIN, 40));
         
-        JPanel panel_5_1 = new JPanel();
-        panel_5_1.setLayout(null);
-        panel_5_1.setBackground(SystemColor.activeCaption);
-        panel_5_1.setBounds(47, 464, 276, 94);
-        panel_2.add(panel_5_1);
+        JPanel no_of_faculty = new JPanel();
+        no_of_faculty.setLayout(null);
+        no_of_faculty.setBackground(SystemColor.activeCaption);
+        no_of_faculty.setBounds(795, 61, 188, 94);
+        panel_2.add(no_of_faculty);
         
-        JLabel lblNewLabel_5_2_1_2 = new JLabel("352");
-        lblNewLabel_5_2_1_2.setFont(new Font("Tahoma", Font.PLAIN, 40));
-        lblNewLabel_5_2_1_2.setBounds(105, 23, 117, 49);
-        panel_5_1.add(lblNewLabel_5_2_1_2);
+        JLabel nooff = new JLabel(String.valueOf(facultyCount));
+        nooff.setHorizontalAlignment(SwingConstants.CENTER);
+        nooff.setFont(new Font("Tahoma", Font.PLAIN, 40));
+        nooff.setBounds(38, 23, 117, 49);
+        no_of_faculty.add(nooff);
         
-        JLabel lblNewLabel_5_3 = new JLabel("CEA");
-        lblNewLabel_5_3.setBounds(47, 590, 117, 13);
-        panel_2.add(lblNewLabel_5_3);
+        JScrollPane scrollPane_4 = new JScrollPane();
+        scrollPane_4.setBounds(793, 385, 349, 303);
+        panel_2.add(scrollPane_4);
         
-        JLabel lblNewLabel_5_1_3 = new JLabel("CBEA");
-        lblNewLabel_5_1_3.setBounds(47, 622, 117, 13);
-        panel_2.add(lblNewLabel_5_1_3);
+        table_4 = new JTable();
+        scrollPane_4.setViewportView(table_4);
         
-        JLabel lblNewLabel_5_1_1_3 = new JLabel("CAS");
-        lblNewLabel_5_1_1_3.setBounds(47, 645, 117, 13);
-        panel_2.add(lblNewLabel_5_1_1_3);
+        JCalendar calendar_1 = new JCalendar();
+        calendar_1.setDecorationBackgroundVisible(false);
+        calendar_1.setDecorationBackgroundColor(Color.WHITE);
+        calendar_1.setWeekOfYearVisible(false);
+        calendar_1.setBounds(47, 37, 697, 377);
+        panel_2.add(calendar_1);
         
-        JLabel lblNewLabel_5_1_1_1_2 = new JLabel("CONFERENCE");
-        lblNewLabel_5_1_1_1_2.setBounds(47, 671, 117, 13);
-        panel_2.add(lblNewLabel_5_1_1_1_2);
+        JPanel panel_4 = new JPanel();
+        panel_4.setBackground(SystemColor.textHighlight);
+        panel_4.setBounds(793, 347, 349, 38);
+        panel_2.add(panel_4);
+        panel_4.setLayout(null);
         
-        JLabel lblNewLabel_5_2_2 = new JLabel("99");
-        lblNewLabel_5_2_2.setBounds(266, 586, 57, 13);
-        panel_2.add(lblNewLabel_5_2_2);
-        
-        JLabel lblNewLabel_5_1_2_1 = new JLabel("99");
-        lblNewLabel_5_1_2_1.setBounds(266, 618, 57, 13);
-        panel_2.add(lblNewLabel_5_1_2_1);
-        
-        JLabel lblNewLabel_5_1_1_2_1 = new JLabel("99");
-        lblNewLabel_5_1_1_2_1.setBounds(266, 641, 57, 13);
-        panel_2.add(lblNewLabel_5_1_1_2_1);
-        
-        JLabel lblNewLabel_5_1_1_1_1_1 = new JLabel("99");
-        lblNewLabel_5_1_1_1_1_1.setBounds(266, 671, 57, 13);
-        panel_2.add(lblNewLabel_5_1_1_1_1_1);
+        JLabel lblNewLabel_6 = new JLabel("MY TASK");
+        lblNewLabel_6.setBounds(0, 0, 349, 38);
+        panel_4.add(lblNewLabel_6);
+        lblNewLabel_6.setHorizontalAlignment(SwingConstants.CENTER);
+        lblNewLabel_6.setForeground(SystemColor.text);
+        lblNewLabel_6.setBackground(SystemColor.textHighlight);
         
         JPanel faculty = new JPanel();
         faculty.setBackground(Color.WHITE);
@@ -350,7 +342,7 @@ public class dashboard extends JFrame {
                     orderBy += " DESC";
                 }
 
-                try {
+                try {	
                     // Establish a database connection (you need to fill in the connection details)
                     Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/rdc-rms", "root", "");
                     
@@ -709,9 +701,9 @@ public class dashboard extends JFrame {
         	                // Get the selected faculty's data from the table model
         	                String paperid = researchtableModel.getValueAt(selectedRow, 0).toString();
         	                String papertitle = researchtableModel.getValueAt(selectedRow, 1).toString();
-        	                String paperfaculty = researchtableModel.getValueAt(selectedRow, 2).toString();
+        	                String paperstatus = researchtableModel.getValueAt(selectedRow, 2).toString();
 //        	         
-        	                researchDetails researchDetails = new researchDetails(paperid, papertitle);
+        	                researchDetails researchDetails = new researchDetails(paperid, papertitle, paperstatus);
         	                researchDetails.setVisible(true);
         	            }
         	        }
@@ -1060,12 +1052,35 @@ public class dashboard extends JFrame {
         logoutbtn.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		
-        		
+        		int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to logout?");
+        		if (result == 0) {
+        		    // Close the current window
+        		    dispose();
+
+        		    // Create and display the login window
+        		    login login = new login();
+        		    login.setVisible(true);
+        		}
         	}
         });
+        
+        JButton aboutbtn = new JButton("ABOUT");
+        aboutbtn.setForeground(SystemColor.text);
+        aboutbtn.setBorderPainted(false);
+        aboutbtn.setBackground(SystemColor.textHighlight);
+        aboutbtn.setHorizontalAlignment(SwingConstants.LEFT);
+        aboutbtn.setBackground(SystemColor.textHighlight);
+        panel.add(aboutbtn);
         logoutbtn.setBackground(SystemColor.textHighlight);
         panel.add(logoutbtn);
         logoutbtn.setForeground(SystemColor.text);
+        
+        JLabel lblNewLabel_7 = new JLabel("Administrator");
+        lblNewLabel_7.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        lblNewLabel_7.setHorizontalAlignment(SwingConstants.CENTER);
+        lblNewLabel_7.setForeground(SystemColor.text);
+        lblNewLabel_7.setBounds(51, 228, 120, 13);
+        menuPanel.add(lblNewLabel_7);
         
     }
     
@@ -1081,6 +1096,50 @@ public class dashboard extends JFrame {
 
         // Set the formatted date and time as the text of the JLabel
         dateTimeLabel.setText(formattedDate);
+    }
+    
+    private static int retrieveFacultyCountFromDatabase() {
+        int facultyCount = 0;
+        // Database connection parameters
+        String url = "jdbc:mysql://localhost:3306/rdc-rms";
+        String username = "root";
+        String password = "";
+
+        try (Connection connection = DriverManager.getConnection(url, username, password)) {
+            // SQL query to retrieve faculty count, modify this query based on your database schema
+            String query = "SELECT COUNT(*) FROM faculty";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query);
+                 ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    facultyCount = resultSet.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Handle potential exceptions better in a real application
+        }
+        return facultyCount;
+    }
+    
+    private static int retrieveResearchCountFromDatabase() {
+    	int ResearchCount = 0;
+        // Database connection parameters
+        String url = "jdbc:mysql://localhost:3306/rdc-rms";
+        String username = "root";
+        String password = "";
+
+        try (Connection connection = DriverManager.getConnection(url, username, password)) {
+            // SQL query to retrieve faculty count, modify this query based on your database schema
+            String query = "SELECT COUNT(*) FROM research_summary";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query);
+                 ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    ResearchCount = resultSet.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Handle potential exceptions better in a real application
+        }
+        return ResearchCount;
     }
 
 

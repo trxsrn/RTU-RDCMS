@@ -49,7 +49,7 @@ public class addnewresearchthrust extends JFrame {
 	 * Create the frame.
 	 */
 	public addnewresearchthrust(dashboard parentDashboard) {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 599, 412);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));

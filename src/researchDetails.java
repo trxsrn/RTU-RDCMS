@@ -40,7 +40,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class researchDetails extends JFrame {
-
+	
+	private String paperid;
     private JPanel contentPane;
     private JTable authorstbl;
     private DefaultTableModel authorstableModel;
@@ -54,7 +55,7 @@ public class researchDetails extends JFrame {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    researchDetails frame = new researchDetails("AAAA", "Research Title");
+                    researchDetails frame = new researchDetails("AAAA", "Research Title", "Colloquium");
                     frame.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -63,7 +64,8 @@ public class researchDetails extends JFrame {
         });
     }
 
-    public researchDetails(String paperid, String papertitle) { 
+    public researchDetails(String paperid, String papertitle, String paperstatus) { 
+    	this.paperid = paperid;
     	setTitle("RESEARCH DETAILS");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setBounds(50, 50, 891, 754);
@@ -213,7 +215,7 @@ public class researchDetails extends JFrame {
         chckbxNewCheckBox.setFont(new Font("Tahoma", Font.PLAIN, 15));
         chckbxNewCheckBox.setForeground(SystemColor.text);
         chckbxNewCheckBox.setBackground(SystemColor.textHighlight);
-        chckbxNewCheckBox.setBounds(241, 386, 74, 21);
+        chckbxNewCheckBox.setBounds(241, 386, 61, 21);
         contentPane.add(chckbxNewCheckBox);
         
         JLabel lblNewLabel_1_3_1_1_1 = new JLabel("If yes, select the date when will be held");
@@ -223,6 +225,7 @@ public class researchDetails extends JFrame {
         contentPane.add(lblNewLabel_1_3_1_1_1);
         
         JDateChooser forumdate = new JDateChooser();
+        forumdate.setDateFormatString("MMMM dd, yyyy");
         forumdate.setBounds(590, 379, 252, 27);
         contentPane.add(forumdate);
         
@@ -259,13 +262,13 @@ public class researchDetails extends JFrame {
         lblNewLabel_1.setForeground(Color.BLACK);
         lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
         
-                JLabel facultyID = new JLabel(paperid);
-                facultyID.setHorizontalAlignment(SwingConstants.RIGHT);
-                facultyID.setBounds(329, 10, 513, 19);
-                panel.add(facultyID);
-                facultyID.setEnabled(false);
-                facultyID.setFont(new Font("Tahoma", Font.PLAIN, 15));
-                facultyID.setForeground(Color.BLACK);
+                JLabel paperID = new JLabel(paperid);
+                paperID.setHorizontalAlignment(SwingConstants.RIGHT);
+                paperID.setBounds(329, 10, 513, 19);
+                panel.add(paperID);
+                paperID.setEnabled(false);
+                paperID.setFont(new Font("Tahoma", Font.PLAIN, 15));
+                paperID.setForeground(Color.BLACK);
                 
                 JButton edit_btn = new JButton(resizedIcon);
                 edit_btn.setBackground(SystemColor.textHighlight);
@@ -346,7 +349,8 @@ public class researchDetails extends JFrame {
                 btnNewButton_1.addActionListener(new ActionListener() {
                 	public void actionPerformed(ActionEvent e) {
                 		
-                		
+                		addnewresearcher addnewresearcher = new addnewresearcher(null, paperid, papertitle, paperstatus);
+            			addnewresearcher.setVisible(true);
                 	}
                 });
                 btnNewButton_1.setFont(new Font("Tahoma", Font.PLAIN, 10));
@@ -358,11 +362,57 @@ public class researchDetails extends JFrame {
                 contentPane.add(btnNewButton);
                 
                 JButton btnNewButton_2 = new JButton("DELETE RESEARCH");
+                btnNewButton_2.addActionListener(new ActionListener() {
+                	public void actionPerformed(ActionEvent e) {
+                		 String paperid = paperID.getText();
+                		 
+                		int response = JOptionPane.showConfirmDialog(
+                                null,
+                                "Are you sure you want to delete this research?",
+                                "Delete Research",
+                                JOptionPane.YES_NO_OPTION
+                            );
+
+                            if (response == JOptionPane.YES_OPTION) {
+//                       
+
+                                try {
+                                    // Establish a database connection (you need to fill in the connection details)
+                                    Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/rdc-rms", "root", "");
+
+                                    // Create a SQL query with sorting
+                                    String query = "DELETE FROM research_summary, research_faculty WHERE paper_id = ?";
+
+                                    // Create a PreparedStatement
+                                    PreparedStatement preparedStatement = connection.prepareStatement(query);
+                                    preparedStatement.setString(1, paperid); // Set your paper_id here
+
+                                    // Execute the update operation
+                                    int rowsAffected = preparedStatement.executeUpdate();
+
+                                    if (rowsAffected > 0) {
+                                        JOptionPane.showMessageDialog(null, "Delete Success!", "SUCCESS", JOptionPane.INFORMATION_MESSAGE);
+                                        dispose();
+                                    } else {
+                                        JOptionPane.showMessageDialog(null, "Cannot delete.", "INFO", JOptionPane.INFORMATION_MESSAGE);
+                                    }
+
+                                    // Close resources (statement and connection)
+                                    preparedStatement.close();
+                                    connection.close();
+                                } catch (SQLException ex) {
+                                    ex.printStackTrace();
+                                    // Handle any exceptions that may occur while querying the database
+                                }
+                            }
+                	}
+                });
                 btnNewButton_2.setBounds(36, 658, 160, 33);
                 contentPane.add(btnNewButton_2);
                 
                 JDateChooser forumdate_1 = new JDateChooser();
-                forumdate_1.setBounds(588, 416, 252, 27);
+                forumdate_1.setDateFormatString("MMMM dd, yyyy");
+                forumdate_1.setBounds(590, 416, 252, 27);
                 contentPane.add(forumdate_1);
                 
                 JLabel lblNewLabel_1_3_1_1_2_1 = new JLabel("Is it subject for conference?");
@@ -385,13 +435,14 @@ public class researchDetails extends JFrame {
                 contentPane.add(lblNewLabel_1_3_1_1_1_1);
                 
                 JDateChooser forumdate_1_1 = new JDateChooser();
+                forumdate_1_1.setDateFormatString("MMMM dd, yyyy");
                 forumdate_1_1.setBounds(590, 453, 252, 27);
                 contentPane.add(forumdate_1_1);
                 
          loadAuthors(paperid);
     }
 
-	private void loadAuthors(String paperid) {
+	void loadAuthors(String paperid) {
 		
 		try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/rdc-rms", "root", "");
                 ) {
@@ -458,4 +509,11 @@ public class researchDetails extends JFrame {
 	        e.printStackTrace();
 	    }
 	}
+
+	void refreshAuthorsTable() {
+		
+	       loadAuthors(paperid);
+		
+	}
+	
 }

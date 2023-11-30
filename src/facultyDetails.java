@@ -46,7 +46,7 @@ public class facultyDetails extends JFrame {
     public facultyDetails(String faculty_Id, String faculty_Name, String faculty_Affiliation, String faculty_College, String faculty_Department ) {
         setTitle("FACULTY DETAILS");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setBounds(100, 100, 1200, 790);
+        setBounds(100, 100, 589, 835);
         contentPane = new JPanel();
         contentPane.setBackground(SystemColor.textHighlight);
         contentPane.setBorder(new EmptyBorder(0, 0, 0, 0));
@@ -54,7 +54,7 @@ public class facultyDetails extends JFrame {
         contentPane.setLayout(null);
 
         JScrollPane scrollPane = new JScrollPane();
-        scrollPane.setBounds(60, 303, 1078, 398);
+        scrollPane.setBounds(0, 356, 575, 410);
         scrollPane.setPreferredSize(new Dimension(1078, 281));
         contentPane.add(scrollPane);
 
@@ -74,7 +74,8 @@ public class facultyDetails extends JFrame {
         			  if (selectedRow >= 0) {
         			      String paperid = individualresearch.getValueAt(selectedRow, 0).toString();
         			      String papertitle = individualresearch.getValueAt(selectedRow, 1).toString();
-        			      researchDetails researchDetails = new researchDetails(paperid, papertitle);
+        			      String paperstatus = individualresearch.getValueAt(selectedRow, 2).toString();
+        			      researchDetails researchDetails = new researchDetails(paperid, papertitle, paperstatus);
         			      researchDetails.setVisible(true);
         			  } else {
         			      JOptionPane.showMessageDialog(null, "Please select a row.", "No Row Selected", JOptionPane.WARNING_MESSAGE);
@@ -87,7 +88,7 @@ public class facultyDetails extends JFrame {
 
         JLabel lblNewLabel_1 = new JLabel("FACULTY ID");
         lblNewLabel_1.setForeground(SystemColor.text);
-        lblNewLabel_1.setBounds(73, 63, 160, 19);
+        lblNewLabel_1.setBounds(26, 175, 545, 19);
         lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
         contentPane.add(lblNewLabel_1);
 
@@ -97,13 +98,13 @@ public class facultyDetails extends JFrame {
         facultyID.setEnabled(false);
         facultyID.setFont(new Font("Tahoma", Font.PLAIN, 15));
         facultyID.setForeground(SystemColor.text);
-        facultyID.setBounds(279, 62, 278, 19);
+        facultyID.setBounds(259, 175, 296, 19);
         contentPane.add(facultyID);
 
         JLabel lblNewLabel_1_1 = new JLabel("FULL NAME");
         lblNewLabel_1_1.setForeground(SystemColor.text);
         lblNewLabel_1_1.setBackground(SystemColor.textHighlight);
-        lblNewLabel_1_1.setBounds(73, 120, 77, 19);
+        lblNewLabel_1_1.setBounds(26, 217, 545, 19);
         lblNewLabel_1_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
         contentPane.add(lblNewLabel_1_1);
 
@@ -113,12 +114,12 @@ public class facultyDetails extends JFrame {
         facultyName.setEditable(false);
         facultyName.setFont(new Font("Tahoma", Font.PLAIN, 15));
         facultyName.setForeground(SystemColor.text);
-        facultyName.setBounds(279, 119, 276, 19);
+        facultyName.setBounds(259, 217, 296, 19);
         contentPane.add(facultyName);
 
         JLabel lblNewLabel_1_2 = new JLabel("AFFILIATION");
         lblNewLabel_1_2.setForeground(SystemColor.text);
-        lblNewLabel_1_2.setBounds(73, 180, 112, 19);
+        lblNewLabel_1_2.setBounds(26, 264, 545, 19);
         lblNewLabel_1_2.setFont(new Font("Tahoma", Font.PLAIN, 15));
         contentPane.add(lblNewLabel_1_2);
 
@@ -128,12 +129,12 @@ public class facultyDetails extends JFrame {
         facultyAffiliation.setEditable(false);
         facultyAffiliation.setFont(new Font("Tahoma", Font.PLAIN, 15));
         facultyAffiliation.setForeground(SystemColor.text);
-        facultyAffiliation.setBounds(279, 180, 279, 18);
+        facultyAffiliation.setBounds(259, 264, 296, 18);
         contentPane.add(facultyAffiliation);
 
         JLabel lblNewLabel_1_3 = new JLabel("COLLEGE/DEPARTMENT:");
         lblNewLabel_1_3.setForeground(SystemColor.text);
-        lblNewLabel_1_3.setBounds(73, 242, 167, 19);
+        lblNewLabel_1_3.setBounds(26, 314, 545, 19);
         lblNewLabel_1_3.setFont(new Font("Tahoma", Font.PLAIN, 15));
         contentPane.add(lblNewLabel_1_3);
 
@@ -143,7 +144,7 @@ public class facultyDetails extends JFrame {
         facultyDept.setEnabled(false);
         facultyDept.setFont(new Font("Tahoma", Font.PLAIN, 15));
         facultyDept.setForeground(Color.WHITE);
-        facultyDept.setBounds(279, 241, 278, 19);
+        facultyDept.setBounds(260, 314, 295, 19);
         contentPane.add(facultyDept);
 
         JLabel lblNewLabel = new JLabel("");
@@ -157,11 +158,17 @@ public class facultyDetails extends JFrame {
         editbtn.setBackground(new Color(255, 215, 0));
         savebtn.setEnabled(false);
 
-        savebtn.setBounds(827, 237, 125, 33);
+        savebtn.setBounds(450, 765, 125, 33);
         contentPane.add(savebtn);
 
-        editbtn.setBounds(962, 237, 125, 33);
+        editbtn.setBounds(124, 765, 327, 33);
         contentPane.add(editbtn);
+        
+        JButton btnNewButton = new JButton("Remove");
+        btnNewButton.setForeground(Color.WHITE);
+        btnNewButton.setBackground(Color.RED);
+        btnNewButton.setBounds(0, 765, 125, 33);
+        contentPane.add(btnNewButton);
         
         savebtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
