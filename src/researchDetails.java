@@ -15,6 +15,8 @@ import java.awt.Image;
 import javax.swing.JScrollPane;
 import java.awt.FlowLayout;
 import java.awt.SystemColor;
+import java.awt.Toolkit;
+
 import javax.swing.ImageIcon;
 import javax.swing.JTextField;
 import java.awt.Color;
@@ -38,6 +40,11 @@ import javax.swing.ButtonGroup;
 import javax.swing.SwingConstants;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.JSeparator;
+import javax.swing.JTree;
+import java.awt.Component;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
 
 public class researchDetails extends JFrame {
 	
@@ -46,9 +53,12 @@ public class researchDetails extends JFrame {
     private JTable authorstbl;
     private DefaultTableModel authorstableModel;
     private JButton selectedButton = null;
-    private JDateChooser dateChooser_1;
-    private JDateChooser dateChooser_2;
-    private JDateChooser dateChooser_3;
+    private JDateChooser f_sched;
+    private JDateChooser col_sched;
+    private JDateChooser con_sched;
+    private JDateChooser f_accomplished;
+    private JDateChooser col_accomplished;
+    private JDateChooser conference_accomplished;
     private final ButtonGroup buttonGroup = new ButtonGroup();
 
     public static void main(String[] args) {
@@ -64,16 +74,23 @@ public class researchDetails extends JFrame {
         });
     }
 
-    public researchDetails(String paperid, String papertitle, String paperstatus) { 
+    public researchDetails(String paperid, String papertitle, String paperstatus) {
+    	setResizable(false); 
     	this.paperid = paperid;
     	setTitle("RESEARCH DETAILS");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setBounds(50, 50, 891, 754);
+        setBounds(50, 50, 891, 824);
         contentPane = new JPanel();
         contentPane.setBackground(SystemColor.textHighlight);
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
         contentPane.setLayout(null);
+        
+	    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+	    int centerX = (screenSize.width - getWidth()) / 2;
+	    int centerY = (screenSize.height - getHeight()) / 2;
+	    setLocation(centerX, centerY);
+	    getContentPane().setLayout(null);
         
         ImageIcon originalIcon = new ImageIcon("C:\\Users\\TRIXIE\\Desktop\\RDCMS\\edit-xxl.png"); // Replace with your image path
 
@@ -102,7 +119,7 @@ public class researchDetails extends JFrame {
         contentPane.setLayout(null);
 
         JScrollPane scrollPane = new JScrollPane();
-        scrollPane.setBounds(36, 200, 806, 162);
+        scrollPane.setBounds(30, 200, 816, 162);
         scrollPane.setPreferredSize(new Dimension(1078, 281));
         contentPane.add(scrollPane);
 
@@ -185,68 +202,41 @@ public class researchDetails extends JFrame {
         });
         lblNewLabel_1_1.setForeground(SystemColor.text);
         lblNewLabel_1_1.setBackground(SystemColor.textHighlight);
-        lblNewLabel_1_1.setBounds(36, 76, 160, 19);
+        lblNewLabel_1_1.setBounds(30, 76, 160, 19);
         lblNewLabel_1_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
         contentPane.add(lblNewLabel_1_1);
 
-        JTextField researchtitle = new JTextField(papertitle);
+        JTextArea researchtitle = new JTextArea(papertitle);
         researchtitle.setEnabled(false);
         researchtitle.setEditable(false);
-        researchtitle.setHorizontalAlignment(SwingConstants.CENTER);
         researchtitle.setFont(new Font("Tahoma", Font.PLAIN, 15));
         researchtitle.setForeground(Color.BLACK);
-        researchtitle.setBounds(36, 105, 806, 55);
+        researchtitle.setBounds(30, 105, 816, 55);
         contentPane.add(researchtitle);
 
         JLabel lblNewLabel_1_3 = new JLabel("PROPONENTS:");
         lblNewLabel_1_3.setForeground(SystemColor.text);
-        lblNewLabel_1_3.setBounds(36, 171, 167, 19);
+        lblNewLabel_1_3.setBounds(30, 170, 167, 19);
         lblNewLabel_1_3.setFont(new Font("Tahoma", Font.PLAIN, 15));
         contentPane.add(lblNewLabel_1_3);
         
-        JLabel lblNewLabel_1_3_1_1 = new JLabel("Is it subject for forum?");
+        JLabel lblNewLabel_1_3_1_1 = new JLabel("Forum");
         lblNewLabel_1_3_1_1.setForeground(SystemColor.text);
-        lblNewLabel_1_3_1_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
-        lblNewLabel_1_3_1_1.setBounds(36, 387, 190, 19);
+        lblNewLabel_1_3_1_1.setFont(new Font("Tahoma", Font.BOLD, 15));
+        lblNewLabel_1_3_1_1.setBounds(30, 387, 190, 19);
         contentPane.add(lblNewLabel_1_3_1_1);
         
-        JRadioButton chckbxNewCheckBox = new JRadioButton("Yes");
-        buttonGroup.add(chckbxNewCheckBox);
-        chckbxNewCheckBox.setFont(new Font("Tahoma", Font.PLAIN, 15));
-        chckbxNewCheckBox.setForeground(SystemColor.text);
-        chckbxNewCheckBox.setBackground(SystemColor.textHighlight);
-        chckbxNewCheckBox.setBounds(241, 386, 61, 21);
-        contentPane.add(chckbxNewCheckBox);
+        f_sched = new JDateChooser();
+        f_sched.setEnabled(false);
+        f_sched.setDateFormatString("MMMM dd, yyyy");
+        f_sched.setBounds(30, 448, 252, 27);
+        contentPane.add(f_sched);
         
-        JLabel lblNewLabel_1_3_1_1_1 = new JLabel("If yes, select the date when will be held");
-        lblNewLabel_1_3_1_1_1.setForeground(SystemColor.text);
-        lblNewLabel_1_3_1_1_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
-        lblNewLabel_1_3_1_1_1.setBounds(308, 424, 301, 19);
-        contentPane.add(lblNewLabel_1_3_1_1_1);
-        
-        JDateChooser forumdate = new JDateChooser();
-        forumdate.setDateFormatString("MMMM dd, yyyy");
-        forumdate.setBounds(590, 379, 252, 27);
-        contentPane.add(forumdate);
-        
-        JLabel lblNewLabel_1_3_1_1_2 = new JLabel("Is it subject for colloquium?");
+        JLabel lblNewLabel_1_3_1_1_2 = new JLabel("Colloquium");
         lblNewLabel_1_3_1_1_2.setForeground(SystemColor.text);
-        lblNewLabel_1_3_1_1_2.setFont(new Font("Tahoma", Font.PLAIN, 15));
-        lblNewLabel_1_3_1_1_2.setBounds(36, 424, 227, 19);
+        lblNewLabel_1_3_1_1_2.setFont(new Font("Tahoma", Font.BOLD, 15));
+        lblNewLabel_1_3_1_1_2.setBounds(312, 387, 227, 19);
         contentPane.add(lblNewLabel_1_3_1_1_2);
-        
-        JRadioButton chckbxNewCheckBox_1 = new JRadioButton("Yes");
-        chckbxNewCheckBox_1.setForeground(SystemColor.text);
-        chckbxNewCheckBox_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
-        chckbxNewCheckBox_1.setBackground(SystemColor.textHighlight);
-        chckbxNewCheckBox_1.setBounds(237, 423, 93, 21);
-        contentPane.add(chckbxNewCheckBox_1);
-        
-        JLabel lblNewLabel_1_3_1_1_1_2 = new JLabel("If yes, select the date when will be held");
-        lblNewLabel_1_3_1_1_1_2.setForeground(SystemColor.text);
-        lblNewLabel_1_3_1_1_1_2.setFont(new Font("Tahoma", Font.PLAIN, 15));
-        lblNewLabel_1_3_1_1_1_2.setBounds(308, 387, 301, 19);
-        contentPane.add(lblNewLabel_1_3_1_1_1_2);
         
         JPanel panel = new JPanel();
         panel.setBackground(Color.YELLOW);
@@ -278,72 +268,21 @@ public class researchDetails extends JFrame {
                         researchtitle.setEnabled(true);
                 	}
                 });
-                edit_btn.setBounds(797, 76, 45, 19);
+                edit_btn.setBounds(797, 76, 49, 19);
                 contentPane.add(edit_btn);
                 
                 JLabel lblNewLabel_1_3_1 = new JLabel("REMARKS:");
+                lblNewLabel_1_3_1.setAlignmentX(Component.CENTER_ALIGNMENT);
                 lblNewLabel_1_3_1.setForeground(SystemColor.text);
                 lblNewLabel_1_3_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
-                lblNewLabel_1_3_1.setBounds(36, 490, 167, 19);
+                lblNewLabel_1_3_1.setBounds(30, 570, 167, 19);
                 contentPane.add(lblNewLabel_1_3_1);
                 
                 JTextArea textArea = new JTextArea();
-                textArea.setBounds(37, 523, 805, 112);
+                textArea.setBounds(30, 599, 816, 73);
                 contentPane.add(textArea);
                 
      
-                JButton savebtn = new JButton("SAVE CHANGES");
-                savebtn.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        int response = JOptionPane.showConfirmDialog(
-                            null,
-                            "Are you sure you want to save changes?",
-                            "Save Changes",
-                            JOptionPane.YES_NO_OPTION
-                        );
-
-                        if (response == JOptionPane.YES_OPTION) {
-                            String title = researchtitle.getText(); // Get the text from researchtitle field
-
-                            try {
-                                // Establish a database connection (you need to fill in the connection details)
-                                Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/rdc-rms", "root", "");
-
-                                // Create a SQL query with sorting
-                                String query = "UPDATE research_summary "
-                                        + "JOIN research_faculty ON research_summary.paper_id = research_faculty.paper_id "
-                                        + "SET research_summary.title = ?, research_faculty.title = ? "
-                                        + "WHERE research_summary.paper_id = ?";
-
-                                // Create a PreparedStatement
-                                PreparedStatement preparedStatement = connection.prepareStatement(query);
-                                preparedStatement.setString(1, title);
-                                preparedStatement.setString(2, title);
-                                preparedStatement.setString(3, paperid); // Set your paper_id here
-
-                                // Execute the update operation
-                                int rowsAffected = preparedStatement.executeUpdate();
-
-                                if (rowsAffected > 0) {
-                                    JOptionPane.showMessageDialog(null, "Saved Changes!", "SUCCESS", JOptionPane.INFORMATION_MESSAGE);
-                                } else {
-                                    JOptionPane.showMessageDialog(null, "No changes were made.", "INFO", JOptionPane.INFORMATION_MESSAGE);
-                                }
-
-                                // Close resources (statement and connection)
-                                preparedStatement.close();
-                                connection.close();
-                            } catch (SQLException ex) {
-                                ex.printStackTrace();
-                                // Handle any exceptions that may occur while querying the database
-                            }
-                        }
-                    }
-                });
-
-                
-                savebtn.setBounds(682, 658, 160, 33);
-                contentPane.add(savebtn);
                 
                 JButton btnNewButton_1 = new JButton("ADD PROPONENT");
                 btnNewButton_1.addActionListener(new ActionListener() {
@@ -354,14 +293,15 @@ public class researchDetails extends JFrame {
                 	}
                 });
                 btnNewButton_1.setFont(new Font("Tahoma", Font.PLAIN, 10));
-                btnNewButton_1.setBounds(711, 168, 131, 22);
+                btnNewButton_1.setBounds(711, 168, 135, 22);
                 contentPane.add(btnNewButton_1);
                 
                 JButton btnNewButton = new JButton("VIEW RESEARCH HISTORY");
-                btnNewButton.setBounds(206, 658, 466, 33);
+                btnNewButton.setBounds(206, 732, 466, 33);
                 contentPane.add(btnNewButton);
                 
                 JButton btnNewButton_2 = new JButton("DELETE RESEARCH");
+                btnNewButton_2.setBackground(Color.RED);
                 btnNewButton_2.addActionListener(new ActionListener() {
                 	public void actionPerformed(ActionEvent e) {
                 		 String paperid = paperID.getText();
@@ -407,39 +347,162 @@ public class researchDetails extends JFrame {
                             }
                 	}
                 });
-                btnNewButton_2.setBounds(36, 658, 160, 33);
+                btnNewButton_2.setBounds(30, 732, 166, 33);
                 contentPane.add(btnNewButton_2);
                 
-                JDateChooser forumdate_1 = new JDateChooser();
-                forumdate_1.setDateFormatString("MMMM dd, yyyy");
-                forumdate_1.setBounds(590, 416, 252, 27);
-                contentPane.add(forumdate_1);
+                con_sched = new JDateChooser();
+                con_sched.setEnabled(false);
+                con_sched.setDateFormatString("MMMM dd, yyyy");
+                con_sched.setBounds(594, 448, 252, 27);
+                contentPane.add(con_sched);
                 
-                JLabel lblNewLabel_1_3_1_1_2_1 = new JLabel("Is it subject for conference?");
+                col_sched = new JDateChooser();
+                col_sched.setEnabled(false);
+                col_sched.setDateFormatString("MMMM dd, yyyy");
+                col_sched.setBounds(312, 448, 252, 27);
+                contentPane.add(col_sched);
+                
+                JButton btnNewButton_3 = new JButton("MARK AS DONE");
+                btnNewButton_3.setBounds(30, 682, 815, 40);
+                contentPane.add(btnNewButton_3);
+                
+                f_accomplished = new JDateChooser();
+                f_accomplished.setEnabled(false);
+                f_accomplished.setDateFormatString("MMMM dd, yyyy");
+                f_accomplished.setBounds(30, 508, 252, 27);
+                contentPane.add(f_accomplished);
+                
+                col_accomplished = new JDateChooser();
+                col_accomplished.setEnabled(false);
+                col_accomplished.setDateFormatString("MMMM dd, yyyy");
+                col_accomplished.setBounds(312, 508, 252, 27);
+                contentPane.add(col_accomplished);
+                
+                conference_accomplished = new JDateChooser();
+                conference_accomplished.setEnabled(false);
+                conference_accomplished.setDateFormatString("MMMM dd, yyyy");
+                conference_accomplished.setBounds(594, 508, 252, 27);
+                contentPane.add(conference_accomplished);
+                
+                JLabel lblNewLabel = new JLabel("Scheduled Date");
+                lblNewLabel.setForeground(Color.WHITE);
+                lblNewLabel.setBounds(30, 425, 141, 13);
+                contentPane.add(lblNewLabel);
+                
+                JLabel lblScheduleDate = new JLabel("Scheduled Date");
+                lblScheduleDate.setForeground(Color.WHITE);
+                lblScheduleDate.setBounds(314, 425, 123, 13);
+                contentPane.add(lblScheduleDate);
+                
+                JLabel lblNewLabel_2_1 = new JLabel("Scheduled Date");
+                lblNewLabel_2_1.setForeground(Color.WHITE);
+                lblNewLabel_2_1.setBounds(594, 425, 110, 13);
+                contentPane.add(lblNewLabel_2_1);
+                
+                JLabel lblAccomplishedDate = new JLabel("Accomplished Date");
+                lblAccomplishedDate.setForeground(Color.WHITE);
+                lblAccomplishedDate.setBounds(30, 485, 141, 13);
+                contentPane.add(lblAccomplishedDate);
+                
+                JLabel lblAccomplishedDate_1 = new JLabel("Accomplished Date");
+                lblAccomplishedDate_1.setForeground(Color.WHITE);
+                lblAccomplishedDate_1.setBounds(314, 485, 123, 13);
+                contentPane.add(lblAccomplishedDate_1);
+                
+                JLabel lblNewLabel_2_1_1 = new JLabel("Accomplished Date");
+                lblNewLabel_2_1_1.setForeground(Color.WHITE);
+                lblNewLabel_2_1_1.setBounds(594, 485, 110, 13);
+                contentPane.add(lblNewLabel_2_1_1);
+                
+                JButton savebtn = new JButton("SAVE CHANGES");
+                savebtn.setBackground(Color.GREEN);
+                savebtn.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        int response = JOptionPane.showConfirmDialog(
+                            null,
+                            "Are you sure you want to save changes?",
+                            "Save Changes",
+                            JOptionPane.YES_NO_OPTION
+                        );
+
+                        if (response == JOptionPane.YES_OPTION) {
+                        	
+                            String title = researchtitle.getText(); 
+                            Date forumsched = f_sched.getDate();
+                            Date colsched = col_sched.getDate();
+                            Date conferencesched = con_sched.getDate();
+                            Date forumacc = f_accomplished.getDate();
+                            Date colacc = col_accomplished.getDate();
+                            Date conacc = conference_accomplished.getDate();
+                           
+                            
+                            try {
+                                // Establish a database connection (you need to fill in the connection details)
+                                Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/rdc-rms", "root", "");
+
+                                // Create a SQL query with sorting
+                                String query = "UPDATE research_summary "
+                                        + "JOIN research_faculty ON research_summary.paper_id = research_faculty.paper_id "
+                                        + "SET research_summary.title = ?, research_faculty.title = ?, research_summary.colloquium_sched = ?, research_faculty.colloquium_sched = ?,  research_summary.forum_sched = ?, research_faculty.forum_sched = ?, research_summary.conference_sched = ?, research_faculty.conference_sched = ?, research_summary.colloquium_accomplished = ?, research_faculty.colloquium_accomplished = ?,  research_summary.forum_accomplished = ?, research_faculty.forum_accomplished = ?, research_summary.conference_accomplished = ?, research_faculty.conference_accomplished = ?"
+                                        + "WHERE research_summary.paper_id = ?";
+
+                                // Create a PreparedStatement
+                                PreparedStatement preparedStatement = connection.prepareStatement(query);
+                                preparedStatement.setString(1, title);
+                                preparedStatement.setString(2, title);
+                                preparedStatement.setDate(3, new java.sql.Date(colsched.getTime()));
+                                preparedStatement.setDate(4, new java.sql.Date(colsched.getTime()));
+                                preparedStatement.setDate(5, new java.sql.Date(forumsched.getTime()));
+                                preparedStatement.setDate(6, new java.sql.Date(forumsched.getTime()));
+                                preparedStatement.setDate(7, new java.sql.Date(conferencesched.getTime()));
+                                preparedStatement.setDate(8, new java.sql.Date(conferencesched.getTime()));
+                                preparedStatement.setDate(9, new java.sql.Date(colacc.getTime()));
+                                preparedStatement.setDate(10, new java.sql.Date(colacc.getTime()));
+                                preparedStatement.setDate(11, new java.sql.Date(forumacc.getTime()));
+                                preparedStatement.setDate(12, new java.sql.Date(forumacc.getTime()));
+                                preparedStatement.setDate(13, new java.sql.Date(conacc.getTime()));
+                                preparedStatement.setDate(14, new java.sql.Date(conacc.getTime()));
+                                preparedStatement.setString(15, paperid);
+
+                                // Execute the update operation
+                                int rowsAffected = preparedStatement.executeUpdate();
+
+                                if (rowsAffected > 0) {
+                                    JOptionPane.showMessageDialog(null, "Saved Changes!", "SUCCESS", JOptionPane.INFORMATION_MESSAGE);
+                                } else {
+                                    JOptionPane.showMessageDialog(null, "No changes were made.", "INFO", JOptionPane.INFORMATION_MESSAGE);
+                                }
+
+                                // Close resources (statement and connection)
+                                preparedStatement.close();
+                                connection.close();
+                            } catch (SQLException ex) {
+                                ex.printStackTrace();
+                                // Handle any exceptions that may occur while querying the database
+                            }
+                        }
+                    }
+                });
+
+                
+                savebtn.setBounds(682, 732, 164, 33);
+                contentPane.add(savebtn);
+                
+
+                
+                JLabel lblNewLabel_1_3_1_1_2_1 = new JLabel("Conference");
                 lblNewLabel_1_3_1_1_2_1.setForeground(SystemColor.text);
-                lblNewLabel_1_3_1_1_2_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
-                lblNewLabel_1_3_1_1_2_1.setBounds(36, 461, 227, 19);
+                lblNewLabel_1_3_1_1_2_1.setFont(new Font("Tahoma", Font.BOLD, 15));
+                lblNewLabel_1_3_1_1_2_1.setBounds(594, 387, 227, 19);
                 contentPane.add(lblNewLabel_1_3_1_1_2_1);
                 
-                JRadioButton chckbxNewCheckBox_1_1 = new JRadioButton("Yes");
-                chckbxNewCheckBox_1_1.setForeground(SystemColor.text);
-                chckbxNewCheckBox_1_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
-                chckbxNewCheckBox_1_1.setBackground(SystemColor.textHighlight);
-                chckbxNewCheckBox_1_1.setBounds(236, 460, 66, 21);
-                contentPane.add(chckbxNewCheckBox_1_1);
-                
-                JLabel lblNewLabel_1_3_1_1_1_1 = new JLabel("If yes, select the date when will be held");
-                lblNewLabel_1_3_1_1_1_1.setForeground(SystemColor.text);
-                lblNewLabel_1_3_1_1_1_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
-                lblNewLabel_1_3_1_1_1_1.setBounds(308, 461, 301, 19);
-                contentPane.add(lblNewLabel_1_3_1_1_1_1);
-                
-                JDateChooser forumdate_1_1 = new JDateChooser();
-                forumdate_1_1.setDateFormatString("MMMM dd, yyyy");
-                forumdate_1_1.setBounds(590, 453, 252, 27);
-                contentPane.add(forumdate_1_1);
-                
          loadAuthors(paperid);
+         try {
+			loadDates(paperid);
+		} catch (ParseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
     }
 
 	void loadAuthors(String paperid) {
@@ -480,7 +543,7 @@ public class researchDetails extends JFrame {
 	private void loadDates(String paperid) throws ParseException {
 	    try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/rdc-rms", "root", "")) {
 	        // Prepare an SQL query to retrieve research data based on paper ID
-	        String sql = "SELECT colloquium, forum, published FROM research_summary WHERE paper_id = ?";
+	        String sql = "SELECT colloquium_sched, forum_sched, conference_sched, colloquium_accomplished, forum_accomplished, conference_accomplished FROM research_summary WHERE paper_id = ?";
 	        PreparedStatement preparedStatement = connection.prepareStatement(sql);
 	        preparedStatement.setString(1, paperid);
 
@@ -489,20 +552,31 @@ public class researchDetails extends JFrame {
 
 	        // Populate the date choosers with data from the result set
 	        while (resultSet.next()) {
-	            String colloquiumDate = resultSet.getString("colloquium");
-	            String forumDate = resultSet.getString("forum");
-	            String publishedDate = resultSet.getString("published");
+	            String colloquiumschedDate = resultSet.getString("colloquium_sched");
+	            String forumschedDate = resultSet.getString("forum_sched");
+	            String conferenceschedDate = resultSet.getString("conference_sched");
+	            String colloquiumaccDate = resultSet.getString("colloquium_accomplished");
+	            String forumaccDate = resultSet.getString("forum_accomplished");
+	            String conferenceaccDate = resultSet.getString("conference_accomplished");
 
-	            // Assuming dateChooser_1, dateChooser_2, dateChooser_3 are your JDateChooser components
+	            // Assuming col_sched, f_sched, and conference_accomplished are your JDateChooser components
 	            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); // Modify the date format based on your database schema
-	            Date colloquium = dateFormat.parse(colloquiumDate);
-	            Date forum = dateFormat.parse(forumDate);
-	            Date published = dateFormat.parse(publishedDate);
+	            Date colloquium = (colloquiumschedDate != null) ? dateFormat.parse(colloquiumschedDate) : null;
+	            Date forum = (forumschedDate != null) ? dateFormat.parse(forumschedDate) : null;
+	            Date conference = (conferenceschedDate != null) ? dateFormat.parse(conferenceschedDate) : null;
+	            Date colloquiumacc = (colloquiumaccDate != null) ? dateFormat.parse(colloquiumaccDate) : null;
+	            Date forumacc = (forumaccDate != null) ? dateFormat.parse(forumaccDate) : null;
+	            Date conferenceacc = (conferenceaccDate != null) ? dateFormat.parse(conferenceaccDate) : null;
 
 	            // Use the class-level variables directly to set the dates
-	            dateChooser_1.setDate(colloquium);
-	            dateChooser_2.setDate(forum);
-	            dateChooser_3.setDate(published);
+	            col_sched.setDate(colloquium);
+	            f_sched.setDate(forum);
+	            con_sched.setDate(conference);
+	            f_accomplished.setDate(colloquiumacc);   
+	            col_accomplished.setDate(forumacc);
+	            conference_accomplished.setDate(conferenceacc);
+	            
+
 	        }
 
 	    } catch (SQLException e) {
@@ -515,5 +589,4 @@ public class researchDetails extends JFrame {
 	       loadAuthors(paperid);
 		
 	}
-	
 }

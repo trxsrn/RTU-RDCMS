@@ -1,3 +1,4 @@
+import java.awt.Dimension;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -9,6 +10,8 @@ import javax.swing.SwingConstants;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.Font;
+import java.awt.Toolkit;
+
 import javax.swing.JEditorPane;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
@@ -55,7 +58,12 @@ public class addnewcollege extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
-		contentPane.setLayout(null);
+		
+	    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+	    int centerX = (screenSize.width - getWidth()) / 2;
+	    int centerY = (screenSize.height - getHeight()) / 2;
+	    setLocation(centerX, centerY);
+	    getContentPane().setLayout(null);
 		
 		JPanel panel = new JPanel();
 		panel.setBounds(0, 0, 585, 64);

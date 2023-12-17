@@ -3,6 +3,7 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.SystemColor;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -51,7 +52,12 @@ public class facultyDetails extends JFrame {
         contentPane.setBackground(SystemColor.textHighlight);
         contentPane.setBorder(new EmptyBorder(0, 0, 0, 0));
         setContentPane(contentPane);
-        contentPane.setLayout(null);
+        
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+	    int centerX = (screenSize.width - getWidth()) / 2;
+	    int centerY = (screenSize.height - getHeight()) / 2;
+	    setLocation(centerX, centerY);
+	    getContentPane().setLayout(null);
 
         JScrollPane scrollPane = new JScrollPane();
         scrollPane.setBounds(0, 356, 575, 410);
@@ -165,6 +171,19 @@ public class facultyDetails extends JFrame {
         contentPane.add(editbtn);
         
         JButton btnNewButton = new JButton("Remove");
+        btnNewButton.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		
+        		int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to remove " + faculty_Name + " as faculty ?");
+        		if (result == 0) {
+        		    
+        		   //enters admin credentials
+        			confirmcredentials confirmscredentials = new confirmcredentials();
+        			confirmscredentials.setVisible(true);
+        		}
+        	
+        	}
+        });
         btnNewButton.setForeground(Color.WHITE);
         btnNewButton.setBackground(Color.RED);
         btnNewButton.setBounds(0, 765, 125, 33);

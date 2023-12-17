@@ -20,7 +20,10 @@ import java.sql.SQLException;
 import java.util.Vector;
 import java.awt.event.ActionEvent;
 import java.awt.SystemColor;
+import java.awt.Toolkit;
 import java.awt.Color;
+import java.awt.Dimension;
+
 import javax.swing.ImageIcon;
 
 public class addnewfaculty extends JFrame {
@@ -69,7 +72,11 @@ public class addnewfaculty extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
-		contentPane.setLayout(null);
+	    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+	    int centerX = (screenSize.width - getWidth()) / 2;
+	    int centerY = (screenSize.height - getHeight()) / 2;
+	    setLocation(centerX, centerY);
+	    getContentPane().setLayout(null);
 		
 		JLabel lblNewLabel_1 = new JLabel("FACULTY ID:");
 		lblNewLabel_1.setBounds(47, 275, 101, 24);

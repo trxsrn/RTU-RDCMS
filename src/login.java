@@ -4,6 +4,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.Color;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.JPasswordField;
@@ -73,9 +75,19 @@ public class login extends JFrame {
 	    btnNewButton.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent e) {
 	    		
-	    		dashboard dashboard = new dashboard();
-    			dashboard.setVisible(true);
-    			dispose();
+	    		String password = passwordField.getText().toString();
+	    		
+	    		if (password.equals("admin@123"))
+	    		{
+		    		dashboard dashboard = new dashboard();
+	    			dashboard.setVisible(true);
+	    			dispose();
+	    		}
+	    		else
+	    		{
+	    			 JOptionPane.showMessageDialog(null, "Invalid Password ", "Error", JOptionPane.ERROR_MESSAGE);
+	    		}
+
 	    	}
 	    	
 	    	

@@ -35,7 +35,10 @@ import javax.swing.JSpinner;
 
 import com.toedter.calendar.JYearChooser;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.SystemColor;
+import java.awt.Toolkit;
+
 import javax.swing.JTextArea;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -79,7 +82,12 @@ public class addnewresearch extends JFrame {
         contentPane.setBackground(SystemColor.textHighlight);
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
-        contentPane.setLayout(null);
+        
+	    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+	    int centerX = (screenSize.width - getWidth()) / 2;
+	    int centerY = (screenSize.height - getHeight()) / 2;
+	    setLocation(centerX, centerY);
+	    getContentPane().setLayout(null);
 
         JLabel lblNewLabel_1 = new JLabel("TITLE");
         lblNewLabel_1.setForeground(SystemColor.text);
