@@ -65,7 +65,8 @@ public class researchDetails extends JFrame {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    researchDetails frame = new researchDetails("AAAA", "Research Title", "Colloquium");
+                	dashboard parentDashboard = new dashboard(); 
+                    researchDetails frame = new researchDetails(parentDashboard, "AAAA", "Research Title", "Colloquium");
                     frame.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -74,7 +75,7 @@ public class researchDetails extends JFrame {
         });
     }
 
-    public researchDetails(String paperid, String papertitle, String paperstatus) {
+    public researchDetails(dashboard parentDashboard, String paperid, String papertitle, String paperstatus) {
     	setResizable(false); 
     	this.paperid = paperid;
     	setTitle("RESEARCH DETAILS");
@@ -227,7 +228,6 @@ public class researchDetails extends JFrame {
         contentPane.add(lblNewLabel_1_3_1_1);
         
         f_sched = new JDateChooser();
-        f_sched.setEnabled(false);
         f_sched.setDateFormatString("MMMM dd, yyyy");
         f_sched.setBounds(30, 448, 252, 27);
         contentPane.add(f_sched);
@@ -321,7 +321,7 @@ public class researchDetails extends JFrame {
                                     Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/rdc-rms", "root", "");
 
                                     // Create a SQL query with sorting
-                                    String query = "DELETE FROM research_summary, research_faculty WHERE paper_id = ?";
+                                    String query = "DELETE FROM research_summary WHERE paper_id = ?";
 
                                     // Create a PreparedStatement
                                     PreparedStatement preparedStatement = connection.prepareStatement(query);
@@ -331,8 +331,20 @@ public class researchDetails extends JFrame {
                                     int rowsAffected = preparedStatement.executeUpdate();
 
                                     if (rowsAffected > 0) {
-                                        JOptionPane.showMessageDialog(null, "Delete Success!", "SUCCESS", JOptionPane.INFORMATION_MESSAGE);
-                                        dispose();
+                                    	
+                                    	String query1 = "DELETE FROM research_summary WHERE paper_id = ?";
+
+                                        PreparedStatement preparedStatement1 = connection.prepareStatement(query);
+                                        preparedStatement.setString(1, paperid); // Set your paper_id here
+                                        
+                                        int rowsAffected1 = preparedStatement.executeUpdate();
+                                        
+                                        if (rowsAffected > 0) {
+                                        
+                                        	parentDashboard.refreshResearchTable();
+	                                        JOptionPane.showMessageDialog(null, "Delete Success!", "SUCCESS", JOptionPane.INFORMATION_MESSAGE);
+	                                        dispose();
+                                        }
                                     } else {
                                         JOptionPane.showMessageDialog(null, "Cannot delete.", "INFO", JOptionPane.INFORMATION_MESSAGE);
                                     }
@@ -351,13 +363,11 @@ public class researchDetails extends JFrame {
                 contentPane.add(btnNewButton_2);
                 
                 con_sched = new JDateChooser();
-                con_sched.setEnabled(false);
                 con_sched.setDateFormatString("MMMM dd, yyyy");
                 con_sched.setBounds(594, 448, 252, 27);
                 contentPane.add(con_sched);
                 
                 col_sched = new JDateChooser();
-                col_sched.setEnabled(false);
                 col_sched.setDateFormatString("MMMM dd, yyyy");
                 col_sched.setBounds(312, 448, 252, 27);
                 contentPane.add(col_sched);
@@ -367,19 +377,16 @@ public class researchDetails extends JFrame {
                 contentPane.add(btnNewButton_3);
                 
                 f_accomplished = new JDateChooser();
-                f_accomplished.setEnabled(false);
                 f_accomplished.setDateFormatString("MMMM dd, yyyy");
                 f_accomplished.setBounds(30, 508, 252, 27);
                 contentPane.add(f_accomplished);
                 
                 col_accomplished = new JDateChooser();
-                col_accomplished.setEnabled(false);
                 col_accomplished.setDateFormatString("MMMM dd, yyyy");
                 col_accomplished.setBounds(312, 508, 252, 27);
                 contentPane.add(col_accomplished);
                 
                 conference_accomplished = new JDateChooser();
-                conference_accomplished.setEnabled(false);
                 conference_accomplished.setDateFormatString("MMMM dd, yyyy");
                 conference_accomplished.setBounds(594, 508, 252, 27);
                 contentPane.add(conference_accomplished);
@@ -434,7 +441,15 @@ public class researchDetails extends JFrame {
                             Date forumacc = f_accomplished.getDate();
                             Date colacc = col_accomplished.getDate();
                             Date conacc = conference_accomplished.getDate();
-                           
+                            
+                            SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, yyyy");
+            	            String forumsc = sdf.format(forumsched);
+            	            String colsc = sdf.format(colsched);
+            	            String conferencesc = sdf.format(conferencesched);
+            	            String forumac = sdf.format(forumacc);
+            	            String colac = sdf.format(conacc);
+            	            String conac = sdf.format(conacc);
+            	           
                             
                             try {
                                 // Establish a database connection (you need to fill in the connection details)
@@ -450,18 +465,18 @@ public class researchDetails extends JFrame {
                                 PreparedStatement preparedStatement = connection.prepareStatement(query);
                                 preparedStatement.setString(1, title);
                                 preparedStatement.setString(2, title);
-                                preparedStatement.setDate(3, new java.sql.Date(colsched.getTime()));
-                                preparedStatement.setDate(4, new java.sql.Date(colsched.getTime()));
-                                preparedStatement.setDate(5, new java.sql.Date(forumsched.getTime()));
-                                preparedStatement.setDate(6, new java.sql.Date(forumsched.getTime()));
-                                preparedStatement.setDate(7, new java.sql.Date(conferencesched.getTime()));
-                                preparedStatement.setDate(8, new java.sql.Date(conferencesched.getTime()));
-                                preparedStatement.setDate(9, new java.sql.Date(colacc.getTime()));
-                                preparedStatement.setDate(10, new java.sql.Date(colacc.getTime()));
-                                preparedStatement.setDate(11, new java.sql.Date(forumacc.getTime()));
-                                preparedStatement.setDate(12, new java.sql.Date(forumacc.getTime()));
-                                preparedStatement.setDate(13, new java.sql.Date(conacc.getTime()));
-                                preparedStatement.setDate(14, new java.sql.Date(conacc.getTime()));
+                                preparedStatement.setString(3, colsc);
+                                preparedStatement.setString(4, colsc);
+                                preparedStatement.setString(5, forumsc);
+                                preparedStatement.setString(6, forumsc);
+                                preparedStatement.setString(7, conferencesc);
+                                preparedStatement.setString(8, conferencesc);
+                                preparedStatement.setString(9, colac);
+                                preparedStatement.setString(10, colac);
+                                preparedStatement.setString(11, forumac);
+                                preparedStatement.setString(12, forumac);
+                                preparedStatement.setString(13, conac);
+                                preparedStatement.setString(14, conac);
                                 preparedStatement.setString(15, paperid);
 
                                 // Execute the update operation
@@ -539,6 +554,8 @@ public class researchDetails extends JFrame {
             e.printStackTrace();
         }
     }
+	
+	
 
 	private void loadDates(String paperid) throws ParseException {
 	    try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/rdc-rms", "root", "")) {
@@ -560,7 +577,7 @@ public class researchDetails extends JFrame {
 	            String conferenceaccDate = resultSet.getString("conference_accomplished");
 
 	            // Assuming col_sched, f_sched, and conference_accomplished are your JDateChooser components
-	            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); // Modify the date format based on your database schema
+	            SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy"); // Modify the date format based on your database schema
 	            Date colloquium = (colloquiumschedDate != null) ? dateFormat.parse(colloquiumschedDate) : null;
 	            Date forum = (forumschedDate != null) ? dateFormat.parse(forumschedDate) : null;
 	            Date conference = (conferenceschedDate != null) ? dateFormat.parse(conferenceschedDate) : null;
@@ -586,6 +603,7 @@ public class researchDetails extends JFrame {
 
 	void refreshAuthorsTable() {
 		
+		   authorstableModel.setRowCount(0);
 	       loadAuthors(paperid);
 		
 	}

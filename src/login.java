@@ -102,7 +102,7 @@ public class login extends JFrame {
 	    getContentPane().add(lblNewLabel_1);
 	    
 	    JLabel lblNewLabel_2 = new JLabel("");
-	    lblNewLabel_2.setIcon(new ImageIcon("C:\\Users\\TRIXIE\\Documents\\FOURTH YEAR\\System Integration\\New folder\\TRR\\css\\img\\RDC logo 2.png"));
+	    lblNewLabel_2.setIcon(new ImageIcon("C:\\xampp\\htdocs\\TRR\\css\\img\\RDC logo 2.png"));
 	    lblNewLabel_2.setBounds(211, 67, 161, 182);
 	    getContentPane().add(lblNewLabel_2);
 	    

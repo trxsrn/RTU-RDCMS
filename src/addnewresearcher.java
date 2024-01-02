@@ -170,8 +170,10 @@ public class addnewresearcher extends JFrame {
 
             		if (rowsInsertedSummary > 0) {
             			 JOptionPane.showMessageDialog(null, "Addition was successful!", "SUCCESS", JOptionPane.INFORMATION_MESSAGE);
-            			 researchDetails researchDetails = new researchDetails(null, null, null);
+            			 researchDetails researchDetails = new researchDetails(parentDashboard, null, null, null);
             			 researchDetails.loadAuthors(paperid);
+            			 researchDetails.refreshAuthorsTable();
+            			 
  	                    dispose();
  	                    
             		} else {
@@ -244,6 +246,8 @@ public class addnewresearcher extends JFrame {
 	        }
 		
 	}
+	
+	
 }
 
 

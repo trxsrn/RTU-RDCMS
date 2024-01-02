@@ -48,11 +48,11 @@ public class autoupdate_task {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             con = DriverManager.getConnection("jdbc:mysql://localhost:3306/rdc-rms", "root", "");
-            pst = con.prepareStatement("SELECT classification, task, deadline, status FROM tasks ORDER BY deadline");
+            pst = con.prepareStatement("SELECT * FROM tasks ORDER BY deadline");
             rs = pst.executeQuery();
             ResultSetMetaData rsmd = rs.getMetaData();
             int n = rsmd.getColumnCount();
-            TasktblModel.setColumnIdentifiers(new Object[]{"LEVEL", "TASK", "DEADLINE", "STATUS"});
+            TasktblModel.setColumnIdentifiers(new Object[]{"ID","LEVEL", "TASK", "DEADLINE", "STATUS"});
 
             while (rs.next()) {
                 Vector<Object> row = new Vector<>();
@@ -96,7 +96,7 @@ public class autoupdate_task {
             con = DriverManager.getConnection("jdbc:mysql://localhost:3306/rdc-rms", "root", "");
 
             // 1. Query for the selected task level
-            String sqlQuerySelected = "SELECT classification, task, deadline, status FROM tasks WHERE classification = ? ORDER BY deadline";
+            String sqlQuerySelected = "SELECT * FROM tasks WHERE classification = ? ORDER BY deadline";
             pst = con.prepareStatement(sqlQuerySelected);
             pst.setString(1, selectedTaskLevel);
             rsSelected = pst.executeQuery();
@@ -106,7 +106,7 @@ public class autoupdate_task {
             
             // Set column identifiers only if the model is empty
             if (TasktblModel.getRowCount() == 0) {
-                TasktblModel.setColumnIdentifiers(new Object[]{"LEVEL", "TASK", "DEADLINE", "STATUS"});
+                TasktblModel.setColumnIdentifiers(new Object[]{"ID", "LEVEL", "TASK", "DEADLINE", "STATUS"});
             }
 
             while (rsSelected.next()) {
@@ -118,7 +118,7 @@ public class autoupdate_task {
             }
 
             // 2. Query for the remaining tasks (excluding the selected task level)
-            String sqlQueryRemaining = "SELECT classification, task, deadline, status FROM tasks WHERE classification != ? ORDER BY deadline";
+            String sqlQueryRemaining = "SELECT * FROM tasks WHERE classification != ? ORDER BY deadline";
             pst = con.prepareStatement(sqlQueryRemaining);
             pst.setString(1, selectedTaskLevel);
             rsRemaining = pst.executeQuery();

@@ -19,6 +19,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -89,14 +90,13 @@ public class dashboard extends JFrame {
     private JTextField research_search;
     private JButton selectedButton = null;
     private JLabel dateTimeLabel;
-    private JTable scheduletbl;
     private JTable thrusttbl;
     private JComboBox<String> discipline; 
     private JTable collegetbl;
     private JTable table_2;
     private JTable tasktbl;
     private JTextField textField;
-    private JTextField textField_1;
+    private JLabel lblGreeting;
 
     
    
@@ -146,7 +146,7 @@ public class dashboard extends JFrame {
         JLabel lblNewLabel = new JLabel("");
         lblNewLabel.setBounds(0, 31, 232, 167);
         lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        lblNewLabel.setIcon(new ImageIcon("C:\\Users\\TRIXIE\\Documents\\FOURTH YEAR\\System Integration\\New folder\\TRR\\css\\img\\RDC logo 2.png"));
+        lblNewLabel.setIcon(new ImageIcon("C:\\xampp\\htdocs\\TRR\\css\\img\\RDC logo 2.png"));
         menuPanel.add(lblNewLabel);
         
         JPanel panel = new JPanel();
@@ -193,6 +193,7 @@ public class dashboard extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 updateDateTimeLabel();
+                updateGreeting();
             }
         });
         timer.start();
@@ -212,83 +213,91 @@ public class dashboard extends JFrame {
         });
         btnNewButton_2.setForeground(SystemColor.controlText);
         btnNewButton_2.setBackground(Color.YELLOW);
-        btnNewButton_2.setBounds(793, 684, 434, 29);
+        btnNewButton_2.setBounds(28, 656, 1180, 38);
         panel_2.add(btnNewButton_2);
         
         JLabel lblNewLabel_4 = new JLabel("FACULTY");
-        lblNewLabel_4.setBounds(793, 96, 77, 13);
+        lblNewLabel_4.setBounds(28, 96, 77, 13);
         panel_2.add(lblNewLabel_4);
         
         JLabel lblNewLabel_4_1 = new JLabel("RESEARCH");
-        lblNewLabel_4_1.setBounds(791, 220, 77, 13);
+        lblNewLabel_4_1.setBounds(470, 96, 77, 13);
         panel_2.add(lblNewLabel_4_1);
-        
-        JLabel lblNewLabel_5 = new JLabel("COLLOQUIUM");
-        lblNewLabel_5.setBounds(998, 243, 84, 13);
-        panel_2.add(lblNewLabel_5);
-        
-        JLabel lblNewLabel_5_1 = new JLabel("FORUM");
-        lblNewLabel_5_1.setBounds(998, 266, 84, 13);
-        panel_2.add(lblNewLabel_5_1);
-        
-        JLabel lblNewLabel_5_1_1 = new JLabel("PUBLISH");
-        lblNewLabel_5_1_1.setBounds(998, 289, 84, 13);
-        panel_2.add(lblNewLabel_5_1_1);
-        
-        JLabel lblNewLabel_5_1_1_1 = new JLabel("CONFERENCE");
-        lblNewLabel_5_1_1_1.setBounds(998, 312, 110, 13);
-        panel_2.add(lblNewLabel_5_1_1_1);
-        
-        JLabel colloquiumcount = new JLabel(String.valueOf(ColCount));
-        colloquiumcount.setBounds(1170, 243, 57, 13);
-        panel_2.add(colloquiumcount);
-        
-        JLabel forumcount = new JLabel(String.valueOf(ForumCount));
-        forumcount.setBounds(1170, 266, 57, 13);
-        panel_2.add(forumcount);
-        
-        JLabel publishcount = new JLabel(String.valueOf(publishCount));
-        publishcount.setBounds(1170, 289, 57, 13);
-        panel_2.add(publishcount);
-        
-        JLabel conferencecount = new JLabel(String.valueOf(conferenceCount));
-        conferencecount.setBounds(1170, 312, 57, 13);
-        panel_2.add(conferencecount);
         
         JPanel panel_5 = new JPanel();
         panel_5.setBackground(SystemColor.textHighlight);
-        panel_5.setBounds(791, 243, 197, 94);
+        panel_5.setBounds(470, 119, 738, 94);
         panel_2.add(panel_5);
         panel_5.setLayout(null);
         
         JLabel noofresearch = new JLabel(String.valueOf(ResearchCount));
         noofresearch.setForeground(SystemColor.text);
         noofresearch.setHorizontalAlignment(SwingConstants.CENTER);
-        noofresearch.setBounds(38, 24, 117, 49);
+        noofresearch.setBounds(39, 24, 117, 49);
         panel_5.add(noofresearch);
         noofresearch.setFont(new Font("Tahoma", Font.PLAIN, 40));
+        
+        JLabel lblNewLabel_5 = new JLabel("COLLOQUIUM");
+        lblNewLabel_5.setForeground(Color.WHITE);
+        lblNewLabel_5.setBounds(201, 24, 84, 13);
+        panel_5.add(lblNewLabel_5);
+        
+        JLabel lblNewLabel_5_1 = new JLabel("FORUM");
+        lblNewLabel_5_1.setForeground(Color.WHITE);
+        lblNewLabel_5_1.setBounds(336, 24, 84, 13);
+        panel_5.add(lblNewLabel_5_1);
+        
+        JLabel lblNewLabel_5_1_1 = new JLabel("PUBLISH");
+        lblNewLabel_5_1_1.setForeground(Color.WHITE);
+        lblNewLabel_5_1_1.setBounds(629, 24, 84, 13);
+        panel_5.add(lblNewLabel_5_1_1);
+        
+        JLabel lblNewLabel_5_1_1_1 = new JLabel("CONFERENCE");
+        lblNewLabel_5_1_1_1.setForeground(Color.WHITE);
+        lblNewLabel_5_1_1_1.setBounds(470, 24, 110, 13);
+        panel_5.add(lblNewLabel_5_1_1_1);
+        
+        JLabel colloquiumcount = new JLabel(String.valueOf(ColCount));
+        colloquiumcount.setForeground(Color.WHITE);
+        colloquiumcount.setBounds(228, 54, 57, 13);
+        panel_5.add(colloquiumcount);
+        
+        JLabel forumcount = new JLabel(String.valueOf(ForumCount));
+        forumcount.setForeground(Color.WHITE);
+        forumcount.setBounds(353, 54, 57, 13);
+        panel_5.add(forumcount);
+        
+        JLabel publishcount = new JLabel(String.valueOf(publishCount));
+        publishcount.setForeground(Color.WHITE);
+        publishcount.setBounds(501, 54, 57, 13);
+        panel_5.add(publishcount);
+        
+        JLabel conferencecount = new JLabel(String.valueOf(conferenceCount));
+        conferencecount.setForeground(Color.WHITE);
+        conferencecount.setBounds(649, 54, 57, 13);
+        panel_5.add(conferencecount);
         
         JPanel no_of_faculty = new JPanel();
         no_of_faculty.setLayout(null);
         no_of_faculty.setBackground(SystemColor.textHighlight);
-        no_of_faculty.setBounds(793, 116, 195, 94);
+        no_of_faculty.setBounds(28, 119, 415, 94);
         panel_2.add(no_of_faculty);
         
         JLabel nooff = new JLabel(String.valueOf(facultyCount));
         nooff.setForeground(SystemColor.text);
         nooff.setHorizontalAlignment(SwingConstants.CENTER);
         nooff.setFont(new Font("Tahoma", Font.PLAIN, 40));
-        nooff.setBounds(38, 23, 117, 49);
+        nooff.setBounds(140, 21, 117, 49);
         no_of_faculty.add(nooff);
         
         JScrollPane taskscrollpane = new JScrollPane();
-        taskscrollpane.setBounds(793, 384, 434, 304);
+        taskscrollpane.setBounds(28, 272, 1180, 383);
         panel_2.add(taskscrollpane);
         
         
         JPanel panel_4 = new JPanel();
         panel_4.setBackground(SystemColor.textHighlight);
-        panel_4.setBounds(793, 347, 434, 38);
+        panel_4.setBounds(28, 235, 1180, 38);
         panel_2.add(panel_4);
         panel_4.setLayout(null);
         
@@ -324,7 +333,7 @@ public class dashboard extends JFrame {
 		tasklevel.addItem("Important");
 		tasklevel.addItem("Low Priority");
         tasklevel.setBackground(SystemColor.textHighlight);
-        tasklevel.setBounds(206, 5, 218, 29);
+        tasklevel.setBounds(952, 5, 218, 29);
         panel_4.add(tasklevel);
         
         TasktblModel = new DefaultTableModel();
@@ -334,6 +343,29 @@ public class dashboard extends JFrame {
         		return false;
         	}
         };
+        tasktbl.addMouseListener(new MouseAdapter() {
+        	@Override
+        	public void mouseClicked(MouseEvent e) {
+        		
+        		  if (e.getClickCount() == 2) { // Detect double-click
+        	            int selectedRow = tasktbl.getSelectedRow();
+        	            if (selectedRow >= 0) {
+
+        	                String task_Id = TasktblModel.getValueAt(selectedRow, 0).toString();
+        	                String classification = TasktblModel.getValueAt(selectedRow, 1).toString();
+        	                String task = TasktblModel.getValueAt(selectedRow, 2).toString();
+        	                String deadline = TasktblModel.getValueAt(selectedRow, 3).toString();
+        	                String status = TasktblModel.getValueAt(selectedRow, 4).toString();
+        	                
+        	                
+        	                //Gets the data and transfers it to the next window 
+        	                taskDetails taskDetails = new taskDetails(dashboard.this, task_Id, classification, task, deadline, status);
+        	                taskDetails.setVisible(true);
+        	                
+        	            }
+        	        }
+        	}
+        });
         taskscrollpane.setViewportView(tasktbl);
         
         
@@ -345,170 +377,11 @@ public class dashboard extends JFrame {
         panel_2.add(panel_6);
         panel_6.setLayout(null);
         
-        JLabel lblNewLabel_8 = new JLabel("Good Morning!");
-        lblNewLabel_8.setBounds(0, 0, 1180, 63);
-        panel_6.add(lblNewLabel_8);
-        lblNewLabel_8.setFont(new Font("Tahoma", Font.BOLD, 20));
-        lblNewLabel_8.setHorizontalAlignment(SwingConstants.CENTER);
-        
-        JPanel panel_7 = new JPanel();
-        panel_7.setBackground(SystemColor.info);
-        panel_7.setBounds(30, 96, 753, 617);
-        panel_2.add(panel_7);
-        panel_7.setLayout(null);
-        
-        JPanel panel_9 = new JPanel();
-        panel_9.setBackground(SystemColor.textHighlight);
-        panel_9.setBounds(0, 287, 753, 42);
-        panel_7.add(panel_9);
-        panel_9.setLayout(null);
-        
-        JLabel lblNewLabel_9 = new JLabel("MONTHLY SCHEDULE");
-        lblNewLabel_9.setForeground(SystemColor.text);
-        lblNewLabel_9.setBounds(0, 0, 753, 42);
-        panel_9.add(lblNewLabel_9);
-        lblNewLabel_9.setBackground(SystemColor.textHighlight);
-        lblNewLabel_9.setFont(new Font("Tahoma", Font.PLAIN, 15));
-        lblNewLabel_9.setHorizontalAlignment(SwingConstants.CENTER);
-        
-        scheduletbl = new JTable();
-        scheduletbl.setBounds(434, 328, 319, 289);
-        panel_7.add(scheduletbl);
-        
-        JCalendar calendar_1 = new JCalendar();
-        calendar_1.getDayChooser().getDayPanel().addMouseListener(new MouseAdapter() {
-        	@Override
-        	public void mouseClicked(MouseEvent e) {
-        		
-        		if (e.getClickCount() == 2) {
-                    JCalendar calendar = (JCalendar) e.getSource();
-                    String selectedDate = calendar.getDate().toString();
-
-                    // Open a new window with the selected date
-                    JFrame newFrame = new JFrame("Selected Date");
-                    JPanel panel = new JPanel();
-                    JLabel label = new JLabel("Selected Date: " + selectedDate);
-                    panel.add(label);
-                    newFrame.getContentPane().add(panel);
-                    newFrame.setSize(200, 100);
-//                    newFrame.setLocationRelativeTo(parentFrame);
-                    newFrame.setVisible(true);
-                }
-        	}
-        });
-        calendar_1.getDayChooser().getDayPanel().setBorder(new EmptyBorder(0, 0, 0, 0));
-        calendar_1.getDayChooser().getDayPanel().setForeground(new Color(25, 25, 112));
-        calendar_1.setBounds(0, 328, 434, 289);
-        panel_7.add(calendar_1);
-        calendar_1.setDecorationBackgroundVisible(false);
-        calendar_1.setDecorationBackgroundColor(Color.WHITE);
-        calendar_1.setWeekOfYearVisible(false);
-        
-        JPanel panel_8 = new JPanel();
-        panel_8.setBackground(SystemColor.textHighlight);
-        panel_8.setBounds(66, 83, 71, 81);
-        panel_7.add(panel_8);
-        panel_8.setLayout(null);
-        
-        JLabel lblNewLabel_1 = new JLabel("00");
-        lblNewLabel_1.setForeground(SystemColor.text);
-        lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
-        lblNewLabel_1.setBounds(16, 29, 45, 25);
-        panel_8.add(lblNewLabel_1);
-        lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 30));
-        
-        JPanel panel_8_1 = new JPanel();
-        panel_8_1.setLayout(null);
-        panel_8_1.setBackground(SystemColor.textHighlight);
-        panel_8_1.setBounds(203, 83, 71, 81);
-        panel_7.add(panel_8_1);
-        
-        JLabel lblNewLabel_1_1 = new JLabel("00");
-        lblNewLabel_1_1.setHorizontalAlignment(SwingConstants.CENTER);
-        lblNewLabel_1_1.setForeground(SystemColor.text);
-        lblNewLabel_1_1.setFont(new Font("Tahoma", Font.PLAIN, 30));
-        lblNewLabel_1_1.setBounds(16, 29, 45, 25);
-        panel_8_1.add(lblNewLabel_1_1);
-        
-        JPanel panel_8_1_1 = new JPanel();
-        panel_8_1_1.setLayout(null);
-        panel_8_1_1.setBackground(SystemColor.textHighlight);
-        panel_8_1_1.setBounds(340, 83, 71, 81);
-        panel_7.add(panel_8_1_1);
-        
-        JLabel lblNewLabel_1_1_1 = new JLabel("00");
-        lblNewLabel_1_1_1.setHorizontalAlignment(SwingConstants.CENTER);
-        lblNewLabel_1_1_1.setForeground(SystemColor.text);
-        lblNewLabel_1_1_1.setFont(new Font("Tahoma", Font.PLAIN, 30));
-        lblNewLabel_1_1_1.setBounds(16, 29, 45, 25);
-        panel_8_1_1.add(lblNewLabel_1_1_1);
-        
-        JPanel panel_8_1_1_1 = new JPanel();
-        panel_8_1_1_1.setLayout(null);
-        panel_8_1_1_1.setBackground(SystemColor.textHighlight);
-        panel_8_1_1_1.setBounds(477, 83, 71, 81);
-        panel_7.add(panel_8_1_1_1);
-        
-        JLabel lblNewLabel_1_1_1_1 = new JLabel("00");
-        lblNewLabel_1_1_1_1.setHorizontalAlignment(SwingConstants.CENTER);
-        lblNewLabel_1_1_1_1.setForeground(SystemColor.text);
-        lblNewLabel_1_1_1_1.setFont(new Font("Tahoma", Font.PLAIN, 30));
-        lblNewLabel_1_1_1_1.setBounds(16, 29, 45, 25);
-        panel_8_1_1_1.add(lblNewLabel_1_1_1_1);
-        
-        JPanel panel_8_1_1_2 = new JPanel();
-        panel_8_1_1_2.setLayout(null);
-        panel_8_1_1_2.setBackground(SystemColor.textHighlight);
-        panel_8_1_1_2.setBounds(614, 83, 71, 81);
-        panel_7.add(panel_8_1_1_2);
-        
-        JLabel lblNewLabel_1_1_1_2 = new JLabel("00");
-        lblNewLabel_1_1_1_2.setHorizontalAlignment(SwingConstants.CENTER);
-        lblNewLabel_1_1_1_2.setForeground(SystemColor.text);
-        lblNewLabel_1_1_1_2.setFont(new Font("Tahoma", Font.PLAIN, 30));
-        lblNewLabel_1_1_1_2.setBounds(16, 29, 45, 25);
-        panel_8_1_1_2.add(lblNewLabel_1_1_1_2);
-        
-        JLabel lblNewLabel_10 = new JLabel("COUNDOWN FOR THE NEXT FORUM AND CONFERENCE");
-        lblNewLabel_10.setHorizontalAlignment(SwingConstants.CENTER);
-        lblNewLabel_10.setBounds(41, 31, 670, 28);
-        panel_7.add(lblNewLabel_10);
-        
-        JLabel lblNewLabel_11 = new JLabel("17th Research Colloquium and 20th Research Forum");
-        lblNewLabel_11.setHorizontalAlignment(SwingConstants.CENTER);
-        lblNewLabel_11.setFont(new Font("Tahoma", Font.PLAIN, 16));
-        lblNewLabel_11.setBounds(62, 236, 634, 28);
-        panel_7.add(lblNewLabel_11);
-        
-        JLabel lblNewLabel_12 = new JLabel("Months");
-        lblNewLabel_12.setHorizontalAlignment(SwingConstants.CENTER);
-        lblNewLabel_12.setBounds(76, 174, 45, 13);
-        panel_7.add(lblNewLabel_12);
-        
-        JLabel lblNewLabel_12_1 = new JLabel("Days");
-        lblNewLabel_12_1.setHorizontalAlignment(SwingConstants.CENTER);
-        lblNewLabel_12_1.setBounds(213, 174, 45, 13);
-        panel_7.add(lblNewLabel_12_1);
-        
-        JLabel lblNewLabel_12_1_1 = new JLabel("Hours");
-        lblNewLabel_12_1_1.setHorizontalAlignment(SwingConstants.CENTER);
-        lblNewLabel_12_1_1.setBounds(350, 174, 45, 13);
-        panel_7.add(lblNewLabel_12_1_1);
-        
-        JLabel lblNewLabel_12_1_1_1 = new JLabel("Minutes");
-        lblNewLabel_12_1_1_1.setHorizontalAlignment(SwingConstants.CENTER);
-        lblNewLabel_12_1_1_1.setBounds(477, 174, 71, 13);
-        panel_7.add(lblNewLabel_12_1_1_1);
-        
-        JLabel lblNewLabel_12_1_1_1_1 = new JLabel("Seconds");
-        lblNewLabel_12_1_1_1_1.setHorizontalAlignment(SwingConstants.CENTER);
-        lblNewLabel_12_1_1_1_1.setBounds(614, 174, 71, 13);
-        panel_7.add(lblNewLabel_12_1_1_1_1);
-        
-        JLabel lblNewLabel_10_1 = new JLabel("until");
-        lblNewLabel_10_1.setHorizontalAlignment(SwingConstants.CENTER);
-        lblNewLabel_10_1.setBounds(41, 210, 670, 28);
-        panel_7.add(lblNewLabel_10_1);
+        lblGreeting = new JLabel();
+        lblGreeting.setBounds(0, 0, 1180, 63);
+        panel_6.add(lblGreeting);
+        lblGreeting.setFont(new Font("Tahoma", Font.BOLD, 20));
+        lblGreeting.setHorizontalAlignment(SwingConstants.CENTER);
         
         JPanel faculty = new JPanel();
         faculty.setBackground(Color.WHITE);
@@ -542,7 +415,7 @@ public class dashboard extends JFrame {
         	                
         	                
         	                //Gets the data and transfers it to the next window 
-        	                facultyDetails facultyDetails = new facultyDetails(faculty_Id, faculty_Name, faculty_Affiliation, faculty_College, faculty_Department);
+        	                facultyDetails facultyDetails = new facultyDetails(dashboard.this, faculty_Id, faculty_Name, faculty_Affiliation, faculty_College, faculty_Department);
         	                facultyDetails.setVisible(true);
         	                
         	            }
@@ -979,11 +852,12 @@ public class dashboard extends JFrame {
         	            int selectedRow = researchtbl.getSelectedRow();
         	            if (selectedRow >= 0) {
         	                // Get the selected faculty's data from the table model
+        	            	
         	                String paperid = researchtableModel.getValueAt(selectedRow, 0).toString();
         	                String papertitle = researchtableModel.getValueAt(selectedRow, 1).toString();
         	                String paperstatus = researchtableModel.getValueAt(selectedRow, 2).toString();
 //        	         
-        	                researchDetails researchDetails = new researchDetails(paperid, papertitle, paperstatus);
+        	                researchDetails researchDetails = new researchDetails(dashboard.this, paperid, papertitle, paperstatus);
         	                researchDetails.setVisible(true);
         	            }
         	        }
@@ -1517,45 +1391,25 @@ public class dashboard extends JFrame {
         
         JLabel lblNewLabel_16 = new JLabel("Account Settings");
         lblNewLabel_16.setFont(new Font("Tahoma", Font.BOLD, 20));
-        lblNewLabel_16.setBounds(29, 253, 240, 33);
+        lblNewLabel_16.setBounds(28, 104, 240, 33);
         settings.add(lblNewLabel_16);
         
         JLabel lblNewLabel_17 = new JLabel("Current Password");
         lblNewLabel_17.setFont(new Font("Tahoma", Font.PLAIN, 15));
-        lblNewLabel_17.setBounds(29, 305, 217, 33);
+        lblNewLabel_17.setBounds(28, 156, 217, 33);
         settings.add(lblNewLabel_17);
         
         textField = new JTextField();
         textField.setFont(new Font("Tahoma", Font.PLAIN, 15));
-        textField.setBounds(244, 305, 323, 33);
+        textField.setBounds(243, 156, 323, 33);
         settings.add(textField);
         textField.setColumns(10);
         
         JButton btnNewButton_3 = new JButton("Change Password");
+        btnNewButton_3.setBackground(SystemColor.textHighlight);
         btnNewButton_3.setFont(new Font("Tahoma", Font.PLAIN, 15));
-        btnNewButton_3.setBounds(29, 362, 186, 33);
+        btnNewButton_3.setBounds(28, 213, 186, 33);
         settings.add(btnNewButton_3);
-        
-        JLabel lblNewLabel_16_1 = new JLabel("Import Database");
-        lblNewLabel_16_1.setFont(new Font("Tahoma", Font.BOLD, 20));
-        lblNewLabel_16_1.setBounds(29, 103, 240, 33);
-        settings.add(lblNewLabel_16_1);
-        
-        textField_1 = new JTextField();
-        textField_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
-        textField_1.setColumns(10);
-        textField_1.setBounds(29, 172, 980, 33);
-        settings.add(textField_1);
-        
-        JButton btnNewButton_3_1 = new JButton("Import");
-        btnNewButton_3_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
-        btnNewButton_3_1.setBounds(1007, 172, 186, 33);
-        settings.add(btnNewButton_3_1);
-        
-        JLabel lblNewLabel_18 = new JLabel("Import new data to the database. (Supports excel files only)");
-        lblNewLabel_18.setFont(new Font("Tahoma", Font.PLAIN, 15));
-        lblNewLabel_18.setBounds(29, 149, 404, 19);
-        settings.add(lblNewLabel_18);
         
         JPanel about = new JPanel();
         content.add(about, "name_7246006468200");
@@ -1609,6 +1463,11 @@ public class dashboard extends JFrame {
         lblNewLabel_15_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
         lblNewLabel_15_1.setBounds(556, 763, 94, 13);
         about.add(lblNewLabel_15_1);
+        
+        JLabel lblNewLabel_14_1 = new JLabel("Version 1.0");
+        lblNewLabel_14_1.setHorizontalAlignment(SwingConstants.CENTER);
+        lblNewLabel_14_1.setBounds(1095, 763, 108, 13);
+        about.add(lblNewLabel_14_1);
         
         JButton dashboardbtn = new JButton("DASHBOARD");
         dashboardbtn.setBorderPainted(false);
@@ -1773,6 +1632,19 @@ public class dashboard extends JFrame {
 
         // Set the formatted date and time as the text of the JLabel
         dateTimeLabel.setText(formattedDate);
+    }
+    
+    private void updateGreeting() {
+        int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        String greeting;
+        if (hour >= 4 && hour < 12) {
+            greeting = "Good Morning!";
+        } else if (hour >= 12 && hour < 17) {
+            greeting = "Good Afternoon!";
+        } else {
+            greeting = "Good Evening!";
+        }
+        lblGreeting.setText(greeting);
     }
     
     private static int retrieveFacultyCountFromDatabase() {
@@ -1955,9 +1827,11 @@ public class dashboard extends JFrame {
         loadDepartment.loadDepartment(DepartmenttblModel);
     }
     
-    private void loadAllTaskData(DefaultTableModel TasktblModel) {
-        TasktblModel.setRowCount(0);
-        autoupdate_task.loadAllTasks(TasktblModel);
+    static void loadAllTaskData(DefaultTableModel TasktblModel) {
+    	if (TasktblModel != null) {
+            TasktblModel.setRowCount(0);  // Clear the table model
+            autoupdate_task.loadAllTasks(TasktblModel);
+        }
     }
 
     private void loadTaskByLevel(DefaultTableModel TasktblModel, JComboBox<String> tasklevel) {

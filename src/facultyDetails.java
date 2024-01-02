@@ -35,7 +35,8 @@ public class facultyDetails extends JFrame {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    facultyDetails frame = new facultyDetails("123", "John Doe", "Department of XYZ", "Science College", "Physics");
+                	dashboard parentDashboard = new dashboard(); 
+                    facultyDetails frame = new facultyDetails(parentDashboard, "123", "John Doe", "Department of XYZ", "Science College", "Physics");
                     frame.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -44,7 +45,7 @@ public class facultyDetails extends JFrame {
         });
     }
 
-    public facultyDetails(String faculty_Id, String faculty_Name, String faculty_Affiliation, String faculty_College, String faculty_Department ) {
+    public facultyDetails(dashboard parentDashboard, String faculty_Id, String faculty_Name, String faculty_Affiliation, String faculty_College, String faculty_Department ) {
         setTitle("FACULTY DETAILS");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setBounds(100, 100, 589, 835);
@@ -81,7 +82,7 @@ public class facultyDetails extends JFrame {
         			      String paperid = individualresearch.getValueAt(selectedRow, 0).toString();
         			      String papertitle = individualresearch.getValueAt(selectedRow, 1).toString();
         			      String paperstatus = individualresearch.getValueAt(selectedRow, 2).toString();
-        			      researchDetails researchDetails = new researchDetails(paperid, papertitle, paperstatus);
+        			      researchDetails researchDetails = new researchDetails(parentDashboard, paperid, papertitle, paperstatus);
         			      researchDetails.setVisible(true);
         			  } else {
         			      JOptionPane.showMessageDialog(null, "Please select a row.", "No Row Selected", JOptionPane.WARNING_MESSAGE);
